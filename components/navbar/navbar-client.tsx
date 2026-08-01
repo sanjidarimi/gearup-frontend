@@ -18,6 +18,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import * as React from "react";
 import Logo from "../shared/Logo";
+import { ModeToggle } from "../shared/ModeToggle";
 
 interface NavbarClientProps {
   user: User | null;
@@ -125,8 +126,10 @@ export function NavbarClient({ user, onLogout }: NavbarClientProps) {
 
           {/* Desktop Right Action Area */}
           <div className="hidden md:flex md:items-center md:gap-3">
+            <ModeToggle/>
             {user ? (
               <div className="relative">
+                
                 <button
                   onClick={() => setIsProfileOpen((prev) => !prev)}
                   className="flex items-center gap-2.5 rounded-xl border border-border/60 bg-muted/40 px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted hover:border-border"
