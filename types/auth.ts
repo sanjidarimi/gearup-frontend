@@ -1,4 +1,4 @@
-export type UserRole = 'CUSTOMER' | 'PROVIDER' | 'ADMIN';
+export type UserRole = "CUSTOMER" | "PROVIDER" | "ADMIN";
 
 export interface User {
   id: string;
@@ -8,12 +8,11 @@ export interface User {
   avatarUrl?: string;
 }
 
-
 export interface RegisterState {
   error?: string;
   success?: boolean;
 }
 export interface LoginState {
-  error?: string;
+  error?: string | null;
   success?: boolean;
 }

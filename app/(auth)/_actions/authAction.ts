@@ -45,13 +45,13 @@ export async function loginUserAction(
 
   try {
     // API call to your backend:
-    // const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/login`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email, password }),
-    // });
-
-    return { success: true };
+    const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const result = await res.json();
+    return result;
   } catch {
     return { error: "Invalid credentials. Please try again." };
   }

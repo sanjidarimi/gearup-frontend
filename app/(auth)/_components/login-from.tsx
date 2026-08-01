@@ -14,30 +14,23 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import * as React from "react";
 import { loginUserAction } from "../_actions/authAction";
+type FormState = {
+  error?: string | null;
+  success?: boolean;
+};
 
+const initialState: FormState = {
+  error: null,
+  success: false,
+};
 export function LoginForm() {
   const searchParams = useSearchParams();
   const isRegistered = searchParams.get("registered") === "true";
-
   const [showPassword, setShowPassword] = React.useState(false);
-  const [pending, setPending] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setPending(true);
-    setErrorMessage(null);
-
-    const formData = new FormData(event.currentTarget);
-    const result = await loginUserAction({}, formData);
-    setPending(false);
-
-    if (result.error) {
-      setErrorMessage(result.error);
-    } else if (result.success) {
-      window.location.href = `/gear`;
-    }
-  }
+  const [state, action, pending] = React.useActionState(
+    loginUserAction,
+    initialState,
+  );
 
   return (
     <div className="w-full max-w-md mx-auto px-4 py-8 sm:px-6">
@@ -69,14 +62,14 @@ export function LoginForm() {
         </div>
       )}
 
-      {errorMessage && (
+      {state?.error && (
         <div className="mb-6 flex items-center gap-2.5 rounded-xl border border-destructive/30 bg-destructive/10 p-3.5 text-sm text-destructive">
           <AlertCircle className="h-4 w-4 shrink-0" />
-          <span>{errorMessage}</span>
+          <span>{state.error}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form action={action} className="space-y-5">
         <div className="space-y-1.5">
           <label
             htmlFor="email"
