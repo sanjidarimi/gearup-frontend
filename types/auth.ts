@@ -7,3 +7,13 @@ export interface User {
   role: UserRole;
   avatarUrl?: string;
 }
+
+
+export interface RegisterState {
+  error?: string;
+  success?: boolean;
+}
+export interface LoginState {
+  error?: string;
+  success?: boolean;
+}
