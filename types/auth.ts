@@ -9,10 +9,20 @@ export interface User {
 }
 
 export interface RegisterState {
-  error?: string;
+  error?: string | null;
   success?: boolean;
 }
 export interface LoginState {
   error?: string | null;
   success?: boolean;
 }
+
+type FormState = {
+  error?: string | null;
+  success?: boolean;
+};
+
+export const initialState: FormState = {
+  error: null,
+  success: false,
+};

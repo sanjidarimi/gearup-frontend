@@ -20,13 +20,17 @@ export async function registerUserAction(
   }
 
   try {
-    // const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/register`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ name, email, password, role }),
-    // });
+    const res = await fetch(
+      `${process.env.BACKEND_API_URL}/api/auth/register`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, role }),
+      },
+    );
+    const result = res.json();
 
-    return { success: true };
+    return result;
   } catch {
     return { error: "Something went wrong. Please try again." };
   }

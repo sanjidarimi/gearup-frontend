@@ -1,5 +1,6 @@
 "use client";
 
+import { initialState, UserRole } from "@/types/auth";
 import {
   AlertCircle,
   ArrowRight,
@@ -13,10 +14,8 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
-
-import { UserRole } from "@/types/auth";
 import { registerUserAction } from "../_actions/authAction";
 
 export function RegisterForm() {
@@ -28,30 +27,34 @@ export function RegisterForm() {
     ["CUSTOMER", "PROVIDER"].includes(defaultRole) ? defaultRole : "CUSTOMER",
   );
   const [showPassword, setShowPassword] = React.useState(false);
-  const [pending, setPending] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setPending(true);
-    setErrorMessage(null);
-
-    const formData = new FormData(event.currentTarget);
-    formData.set("role", role);
-
-    const result = await registerUserAction({}, formData);
-    setPending(false);
-
-    if (result.error) {
-      setErrorMessage(result.error);
-    } else if (result.success) {
-      window.location.href = `/auth/login?registered=true`;
-    }
+  const [state, action, isPending] = React.useActionState(
+    registerUserAction,
+    initialState,
+  );
+  const router = useRouter();
+  if (state.success) {
+    router.push("/dashboard");
   }
+  // async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  //   event.preventDefault();
+  //   setPending(true);
+  //   setErrorMessage(null);
+
+  //   const formData = new FormData(event.currentTarget);
+  //   formData.set("role", role);
+
+  //   const result = await registerUserAction({}, formData);
+  //   setPending(false);
+
+  //   if (result.error) {
+  //     setErrorMessage(result.error);
+  //   } else if (result.success) {
+  //     window.location.href = `/auth/login?registered=true`;
+  //   }
+  // }
 
   return (
     <div className="w-full max-w-md mx-auto px-4 py-8 sm:px-6">
-
       <div className="mb-8">
         <Link
           href="/"
@@ -74,23 +77,19 @@ export function RegisterForm() {
         </p>
       </div>
 
-
-      {errorMessage && (
+      {state.error && (
         <div className="mb-6 flex items-center gap-2.5 rounded-xl border border-destructive/30 bg-destructive/10 p-3.5 text-sm text-destructive">
           <AlertCircle className="h-4 w-4 shrink-0" />
-          <span>{errorMessage}</span>
+          <span>{state.error}</span>
         </div>
       )}
 
-
-      <form onSubmit={handleSubmit} className="space-y-5">
-   
+      <form action={action} className="space-y-5">
         <div className="space-y-2">
           <label className="text-xs font-semibold text-foreground uppercase tracking-wider">
             I want to
           </label>
           <div className="grid grid-cols-2 gap-3">
-         
             <button
               type="button"
               onClick={() => setRole("CUSTOMER")}
@@ -116,7 +115,6 @@ export function RegisterForm() {
               </span>
             </button>
 
-  
             <button
               type="button"
               onClick={() => setRole("PROVIDER")}
@@ -144,7 +142,6 @@ export function RegisterForm() {
           </div>
         </div>
 
-    
         <div className="space-y-1.5">
           <label htmlFor="name" className="text-xs font-medium text-foreground">
             Full Name
@@ -161,7 +158,6 @@ export function RegisterForm() {
             />
           </div>
         </div>
-
 
         <div className="space-y-1.5">
           <label
@@ -183,7 +179,6 @@ export function RegisterForm() {
           </div>
         </div>
 
-    
         <div className="space-y-1.5">
           <label
             htmlFor="password"
@@ -216,7 +211,6 @@ export function RegisterForm() {
           </div>
         </div>
 
- 
         <div className="flex items-start gap-2 pt-1">
           <input
             id="terms"
@@ -249,10 +243,10 @@ export function RegisterForm() {
 
         <button
           type="submit"
-          disabled={pending}
+          disabled={isPending}
           className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/20 hover:bg-primary/90 transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
         >
-          {pending ? (
+          {isPending ? (
             <span>Creating account...</span>
           ) : (
             <>
@@ -265,7 +259,6 @@ export function RegisterForm() {
         </button>
       </form>
 
-   
       <p className="mt-8 text-center text-sm text-muted-foreground">
         Already have an account?{" "}
         <Link

@@ -1,5 +1,6 @@
 "use client";
 
+import { initialState } from "@/types/auth";
 import {
   AlertCircle,
   ArrowRight,
@@ -11,18 +12,10 @@ import {
   Mail,
 } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 import { loginUserAction } from "../_actions/authAction";
-type FormState = {
-  error?: string | null;
-  success?: boolean;
-};
 
-const initialState: FormState = {
-  error: null,
-  success: false,
-};
 export function LoginForm() {
   const searchParams = useSearchParams();
   const isRegistered = searchParams.get("registered") === "true";
@@ -31,7 +24,11 @@ export function LoginForm() {
     loginUserAction,
     initialState,
   );
-
+  const router = useRouter();
+  if (state.success) {
+    
+    router.push("/dashboard");
+  }
   return (
     <div className="w-full max-w-md mx-auto px-4 py-8 sm:px-6">
       <div className="mb-8">
