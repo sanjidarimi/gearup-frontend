@@ -26,7 +26,6 @@ export function LoginForm() {
   );
   const router = useRouter();
   if (state.success) {
-    
     router.push("/dashboard");
   }
   return (

@@ -1,11 +1,12 @@
 "use server";
 
 import { LoginState, RegisterState, UserRole } from "@/types/auth";
+import { cookies } from "next/headers";
 
-export async function registerUserAction(
+export const registerUserAction = async (
   prevState: RegisterState,
   formData: FormData,
-): Promise<RegisterState> {
+) => {
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
@@ -20,21 +21,31 @@ export async function registerUserAction(
   }
 
   try {
-    const res = await fetch(
-      `${process.env.BACKEND_API_URL}/api/auth/register`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password, role }),
-      },
-    );
-    const result = res.json();
-
+    const res = await fetch(`${process.env.BACKEND_API_URL}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password, role }),
+    });
+    const result = await res.json();
+    console.log(result)
+    if (result.success) {
+      const cookieStore = await cookies();
+      cookieStore.set("accessToken", result.data.accessToken, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 24,
+        sameSite: "lax",
+      });
+      cookieStore.set("refreshToken", result.data.refreshtoken, {
+        httpOnly: true,
+        maxAge: 60 * 60 * 24 * 7,
+        sameSite: "lax",
+      });
+    }
     return result;
   } catch {
     return { error: "Something went wrong. Please try again." };
   }
-}
+};
 
 export async function loginUserAction(
   prevState: LoginState,
@@ -48,8 +59,7 @@ export async function loginUserAction(
   }
 
   try {
-    // API call to your backend:
-    const res = await fetch(`${process.env.BACKEND_API_URL}/api/auth/login`, {
+    const res = await fetch(`${process.env.BACKEND_API_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password }),

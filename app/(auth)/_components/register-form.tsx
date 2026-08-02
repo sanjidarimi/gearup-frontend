@@ -20,38 +20,26 @@ import { registerUserAction } from "../_actions/authAction";
 
 export function RegisterForm() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+
   const defaultRole =
     (searchParams.get("role")?.toUpperCase() as UserRole) || "CUSTOMER";
 
   const [role, setRole] = React.useState<UserRole>(
-    ["CUSTOMER", "PROVIDER"].includes(defaultRole) ? defaultRole : "CUSTOMER",
+    ["CUSTOMER", "PROVIDER"].includes(defaultRole) ? defaultRole : "CUSTOMER"
   );
   const [showPassword, setShowPassword] = React.useState(false);
+
   const [state, action, isPending] = React.useActionState(
     registerUserAction,
-    initialState,
+    initialState
   );
-  const router = useRouter();
-  if (state.success) {
-    router.push("/dashboard");
-  }
-  // async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-  //   event.preventDefault();
-  //   setPending(true);
-  //   setErrorMessage(null);
 
-  //   const formData = new FormData(event.currentTarget);
-  //   formData.set("role", role);
-
-  //   const result = await registerUserAction({}, formData);
-  //   setPending(false);
-
-  //   if (result.error) {
-  //     setErrorMessage(result.error);
-  //   } else if (result.success) {
-  //     window.location.href = `/auth/login?registered=true`;
-  //   }
-  // }
+  React.useEffect(() => {
+    if (state?.success) {
+      router.push("/login?registered=true");
+    }
+  }, [state?.success, router]);
 
   return (
     <div className="w-full max-w-md mx-auto px-4 py-8 sm:px-6">
@@ -77,7 +65,7 @@ export function RegisterForm() {
         </p>
       </div>
 
-      {state.error && (
+      {state?.error && (
         <div className="mb-6 flex items-center gap-2.5 rounded-xl border border-destructive/30 bg-destructive/10 p-3.5 text-sm text-destructive">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{state.error}</span>
@@ -85,6 +73,9 @@ export function RegisterForm() {
       )}
 
       <form action={action} className="space-y-5">
+       
+        <input type="hidden" name="role" value={role} />
+
         <div className="space-y-2">
           <label className="text-xs font-semibold text-foreground uppercase tracking-wider">
             I want to
