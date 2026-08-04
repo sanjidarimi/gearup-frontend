@@ -41,6 +41,7 @@ export function RegisterForm() {
     }
   }, [state?.success, router]);
 
+console.log("action", action)
   return (
     <div className="w-full max-w-md mx-auto px-4 py-8 sm:px-6">
       <div className="mb-8">

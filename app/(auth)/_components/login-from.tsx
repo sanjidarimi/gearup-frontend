@@ -28,6 +28,7 @@ export function LoginForm() {
   if (state.success) {
     router.push("/dashboard");
   }
+  console.log("state eror from login from",state.error)
   return (
     <div className="w-full max-w-md mx-auto px-4 py-8 sm:px-6">
       <div className="mb-8">
@@ -62,6 +63,7 @@ export function LoginForm() {
         <div className="mb-6 flex items-center gap-2.5 rounded-xl border border-destructive/30 bg-destructive/10 p-3.5 text-sm text-destructive">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{state.error}</span>
+
         </div>
       )}
 

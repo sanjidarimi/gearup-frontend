@@ -201,7 +201,7 @@ export function NavbarClient({ user, onLogout }: NavbarClientProps) {
                   Sign In
                 </Link>
                 <Link
-                  href="/auth/register"
+                  href="/register"
                   className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 transition-all"
                 >
                   Get Started
@@ -300,7 +300,7 @@ export function NavbarClient({ user, onLogout }: NavbarClientProps) {
                     Sign In
                   </Link>
                   <Link
-                    href="/auth/register"
+                    href="/register"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center justify-center rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
                   >
