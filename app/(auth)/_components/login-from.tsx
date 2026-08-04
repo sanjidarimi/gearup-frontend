@@ -20,15 +20,35 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const isRegistered = searchParams.get("registered") === "true";
   const [showPassword, setShowPassword] = React.useState(false);
+  
   const [state, action, pending] = React.useActionState(
     loginUserAction,
-    initialState,
+    initialState
   );
+
   const router = useRouter();
-  if (state.success) {
-    router.push("/dashboard");
-  }
-  console.log("state eror from login from",state.error)
+
+  // Role-based navigation inside useEffect
+  React.useEffect(() => {
+    if (state?.success && state?.role) {
+      const userRole = state.role.toUpperCase();
+
+      switch (userRole) {
+        case "ADMIN":
+          router.push("/dashboard/admin");
+          break;
+        case "PROVIDER":
+          router.push("/dashboard/provider");
+          break;
+        case "CUSTOMER":
+          router.push("/dashboard/customer");
+          break;
+        default:
+          router.push("/dashboard/customer");
+      }
+    }
+  }, [state?.success, state?.role, router]);
+
   return (
     <div className="w-full max-w-md mx-auto px-4 py-8 sm:px-6">
       <div className="mb-8">
@@ -63,7 +83,6 @@ export function LoginForm() {
         <div className="mb-6 flex items-center gap-2.5 rounded-xl border border-destructive/30 bg-destructive/10 p-3.5 text-sm text-destructive">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>{state.error}</span>
-
         </div>
       )}
 

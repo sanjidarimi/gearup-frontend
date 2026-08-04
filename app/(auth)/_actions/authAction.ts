@@ -2,6 +2,7 @@
 
 import { LoginState, RegisterState, UserRole } from "@/types/auth";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export const registerUserAction = async (
   prevState: RegisterState,
@@ -27,7 +28,7 @@ export const registerUserAction = async (
       body: JSON.stringify({ name, email, password, role }),
     });
     const result = await res.json();
-    console.log(result)
+    console.log(result);
     if (result.success) {
       const cookieStore = await cookies();
       cookieStore.set("accessToken", result.data.accessToken, {
@@ -57,7 +58,7 @@ export async function loginUserAction(
   if (!email || !password) {
     return { error: "Please enter both email and password." };
   }
-
+  let roleToRedirect: string | null = null;
   try {
     const res = await fetch(`${process.env.BACKEND_API_URL}/auth/login`, {
       method: "POST",
@@ -65,8 +66,25 @@ export async function loginUserAction(
       body: JSON.stringify({ email, password }),
     });
     const result = await res.json();
-    return result;
+    if (!res.ok) {
+      return {
+        error: result.message || "Invalid credentials.",
+        success: false,
+      };
+    }
+
+    roleToRedirect = result.data?.role || result.role;
   } catch {
     return { error: "Invalid credentials. Please try again." };
+  }
+  switch (roleToRedirect?.toUpperCase()) {
+    case "ADMIN":
+      redirect("/dashboard/admin");
+    case "PROVIDER":
+      redirect("/dashboard/provider");
+    case "CUSTOMER":
+      redirect("/dashboard/customer");
+    default:
+      redirect("/dashboard/customer");
   }
 }

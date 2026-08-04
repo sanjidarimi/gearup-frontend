@@ -195,7 +195,7 @@ export function NavbarClient({ user, onLogout }: NavbarClientProps) {
             ) : (
               <div className="flex items-center gap-2">
                 <Link
-                  href="/auth/login"
+                  href="/login"
                   className="rounded-xl px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
                 >
                   Sign In
@@ -293,7 +293,7 @@ export function NavbarClient({ user, onLogout }: NavbarClientProps) {
               ) : (
                 <div className="grid grid-cols-2 gap-2">
                   <Link
-                    href="/auth/login"
+                    href="/login"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center justify-center rounded-xl border border-border px-4 py-2.5 text-sm font-medium text-foreground hover:bg-muted transition-colors"
                   >
