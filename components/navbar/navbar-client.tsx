@@ -1,6 +1,5 @@
 "use client";
-
-import { User, UserRole } from "@/types/auth";
+import {  IUserProfile, UserRole } from "@/types/auth";
 import {
   Activity,
   ChevronDown,
@@ -21,7 +20,7 @@ import Logo from "../shared/Logo";
 import { ModeToggle } from "../shared/ModeToggle";
 
 interface NavbarClientProps {
-  user: User | null;
+  user: IUserProfile | null;
   onLogout?: () => Promise<void>;
 }
 
@@ -90,8 +89,6 @@ export function NavbarClient({ user, onLogout }: NavbarClientProps) {
       <nav className="relative rounded-2xl border border-border/80 bg-background/80 shadow-lg shadow-black/5 backdrop-blur-md transition-all duration-200 dark:shadow-black/20">
         <div className="flex h-16 items-center justify-between px-4 sm:px-6">
           <Logo />
-
-   
           <div className="hidden md:flex md:items-center md:gap-1">
             <Link
               href="/gear"
@@ -124,12 +121,10 @@ export function NavbarClient({ user, onLogout }: NavbarClientProps) {
             })}
           </div>
 
-          {/* Desktop Right Action Area */}
           <div className="hidden md:flex md:items-center md:gap-3">
-            <ModeToggle/>
+            <ModeToggle />
             {user ? (
               <div className="relative">
-                
                 <button
                   onClick={() => setIsProfileOpen((prev) => !prev)}
                   className="flex items-center gap-2.5 rounded-xl border border-border/60 bg-muted/40 px-3 py-1.5 text-sm font-medium transition-colors hover:bg-muted hover:border-border"
@@ -210,7 +205,7 @@ export function NavbarClient({ user, onLogout }: NavbarClientProps) {
             )}
           </div>
 
-          {/* Mobile Menu Toggle Button */}
+     
           <div className="flex md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}

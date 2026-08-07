@@ -1,21 +1,16 @@
-import { User } from '@/types/auth';
-import { NavbarClient } from './navbar-client';
-
-
-async function getCurrentUser(): Promise<User | null> {
-  
-  // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, { headers });
-  // return res.ok ? await res.json() : null;
-
-  return null;
-}
+import { getMe } from "@/services/get-me";
+import { NavbarClient } from "./navbar-client";
 
 export async function Navbar() {
-  const user = await getCurrentUser();
+  let user = null;
+  try {
+    user = await getMe();
+  } catch {
+    user = null;
+  }
 
   async function handleLogout() {
-    'use server';
-    // Add server action logout logic (e.g., clear session cookies / invalidate JWT token)
+    "use server";
   }
 
   return <NavbarClient user={user} onLogout={handleLogout} />;

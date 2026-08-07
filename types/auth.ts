@@ -1,16 +1,28 @@
 export type UserRole = "CUSTOMER" | "PROVIDER" | "ADMIN";
+export type UserStatus = "ACTIVE" | "INACTIVE" | "SUSPENDED";
 
-export interface User {
+export interface IUserProfile {
   id: string;
   name: string;
   email: string;
   role: UserRole;
-  avatarUrl?: string;
+  status: UserStatus;
+  createdAt: Date;
+  updatedAt: Date;
+  profile: {
+    id: string;
+    profilePhoto: string | null;
+    bio: string | null;
+    userId: string;
+    createdAt: Date;
+    updatedAt: Date;
+  } | null;
 }
 
 export interface RegisterState {
   error?: string | null;
   success?: boolean;
+  message?:string
 }
 export interface LoginState {
   error?: string | null;

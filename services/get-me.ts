@@ -1,19 +1,18 @@
-"use server"
+"use server";
 import { cookies } from "next/headers";
+import { User } from "@/types/auth";
 
-export const getMe = async () => {
+export const getMe = async (): Promise<User> => {
   const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken");
+  const accessToken = cookieStore.get("accessToken")?.value;
   if (!accessToken) {
     throw new Error("user not found");
   }
   const res = await fetch(`${process.env.BACKEND_API_URL}/auth/get-me`, {
     headers: {
-      // Authorization : accessToken as unknown as string => way 1
-      // Authorization : `${accessToken}` => way 2
-      Cookies: `accessToken=${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
   const result = await res.json();
-  return result;
+  return result.data;
 };

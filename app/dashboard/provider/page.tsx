@@ -1,3 +1,3 @@
-export const ProviderDashboard = () => {
-  return <div>ProviderDashboard</div>;
-};
+export default function ProviderPage() {
+  return <div>ProviderPage</div>;
+}

@@ -20,15 +20,14 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const isRegistered = searchParams.get("registered") === "true";
   const [showPassword, setShowPassword] = React.useState(false);
-  
+
   const [state, action, pending] = React.useActionState(
     loginUserAction,
-    initialState
+    initialState,
   );
 
   const router = useRouter();
 
-  // Role-based navigation inside useEffect
   React.useEffect(() => {
     if (state?.success && state?.role) {
       const userRole = state.role.toUpperCase();
