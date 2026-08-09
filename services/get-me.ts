@@ -8,7 +8,7 @@ export const getMe = async (): Promise<IUserProfile> => {
   if (!accessToken) {
     throw new Error("user not found");
   }
-  const res = await fetch(`${process.env.BACKEND_API_URL}/auth/get-me`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/get-me`, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
