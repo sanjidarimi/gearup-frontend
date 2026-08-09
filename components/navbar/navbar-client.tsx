@@ -1,5 +1,5 @@
 "use client";
-import {  IUserProfile, UserRole } from "@/types/auth";
+import { IUserProfile, UserRole } from "@/types/auth";
 import {
   Activity,
   ChevronDown,
@@ -18,10 +18,10 @@ import { usePathname } from "next/navigation";
 import * as React from "react";
 import Logo from "../shared/Logo";
 import { ModeToggle } from "../shared/ModeToggle";
+import { logout } from "@/services/logout";
 
 interface NavbarClientProps {
   user: IUserProfile | null;
-  onLogout?: () => Promise<void>;
 }
 
 interface NavLink {
@@ -30,7 +30,7 @@ interface NavLink {
   icon: React.ElementType;
 }
 
-export function NavbarClient({ user, onLogout }: NavbarClientProps) {
+export function NavbarClient({ user }: NavbarClientProps) {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [isProfileOpen, setIsProfileOpen] = React.useState(false);
@@ -83,7 +83,9 @@ export function NavbarClient({ user, onLogout }: NavbarClientProps) {
     if (path === "/" && pathname !== "/") return false;
     return pathname.startsWith(path);
   };
-
+  const handleLogout = async () => {
+    await logout();
+  };
   return (
     <header className="sticky top-4 z-50 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
       <nav className="relative rounded-2xl border border-border/80 bg-background/80 shadow-lg shadow-black/5 backdrop-blur-md transition-all duration-200 dark:shadow-black/20">
@@ -176,7 +178,7 @@ export function NavbarClient({ user, onLogout }: NavbarClientProps) {
                       <button
                         onClick={async () => {
                           setIsProfileOpen(false);
-                          if (onLogout) await onLogout();
+                          handleLogout();
                         }}
                         className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors"
                       >
@@ -205,7 +207,6 @@ export function NavbarClient({ user, onLogout }: NavbarClientProps) {
             )}
           </div>
 
-     
           <div className="flex md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
@@ -277,7 +278,7 @@ export function NavbarClient({ user, onLogout }: NavbarClientProps) {
                   <button
                     onClick={async () => {
                       setIsMobileMenuOpen(false);
-                      if (onLogout) await onLogout();
+                      handleLogout();
                     }}
                     className="flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-base font-medium text-destructive hover:bg-destructive/10 transition-colors"
                   >

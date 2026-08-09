@@ -1,8 +1,8 @@
 "use server";
+import { IUserProfile } from "@/types/auth";
 import { cookies } from "next/headers";
-import { User } from "@/types/auth";
 
-export const getMe = async (): Promise<User> => {
+export const getMe = async (): Promise<IUserProfile> => {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
   if (!accessToken) {
@@ -12,7 +12,13 @@ export const getMe = async (): Promise<User> => {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
+    cache: "force-cache",
+    next: {
+      revalidate: 60 * 60 * 24,
+      tags: ["my-profile"],
+    },
   });
+
   const result = await res.json();
   return result.data;
 };

@@ -9,9 +9,5 @@ export async function Navbar() {
     user = null;
   }
 
-  async function handleLogout() {
-    "use server";
-  }
-
-  return <NavbarClient user={user} onLogout={handleLogout} />;
+  return <NavbarClient user={user} />;
 }
