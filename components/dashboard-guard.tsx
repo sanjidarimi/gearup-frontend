@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { User, UserRole } from "@/types/auth";
+import { IUserProfile, UserRole } from "@/types/auth";
 
 const roleToDashboard: Record<UserRole, string> = {
   ADMIN: "/dashboard/admin",
@@ -14,7 +14,7 @@ export function DashboardGuard({
   user,
   children,
 }: {
-  user: User;
+  user: IUserProfile;
   children: React.ReactNode;
 }) {
   const router = useRouter();

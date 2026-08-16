@@ -6,12 +6,13 @@ const GearPage = () => {
   console.log(data);
   return (
     <>
-      {data?.data.map((gear) => (
+      {/* {data?.data.map((gear) => (
         <div key={gear.id}>
           <h2>{gear.name}</h2>
           <p>${gear.price}</p>
         </div>
-      ))}
+      ))} */}
+      <div>gear page</div>
     </>
   );
 };
