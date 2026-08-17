@@ -1,29 +1,26 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
+
 const AUTH_ROUTES = ["/login", "/register"];
-export async function proxy(request: NextRequest) {
+
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
   const accessToken = request.cookies.get("accessToken")?.value;
-  const decodedToken = accessToken
-    ? (jwt.decode(accessToken) as JwtPayload)
-    : null;
-  console.log(decodedToken);
-  let userRole = null;
-  if (decodedToken) {
-    let userRole = decodedToken.role;
+
+  const isAuthRoute = AUTH_ROUTES.includes(pathname);
+  const isDashboardRoute = pathname.startsWith("/dashboard");
+
+  if (accessToken && isAuthRoute) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
-  if (accessToken && AUTH_ROUTES.includes(pathname)) {
-    if (userRole === "CUSTOMER") {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    } else if (userRole === "ADMIN") {
-      return NextResponse.redirect(new URL("/dashboard/admin", request.url));
-    } else if (userRole === "PROVIDER") {
-      return NextResponse.redirect(new URL("dashboard/provider", request.url));
-    }
+
+  if (!accessToken && isDashboardRoute) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/login", "/register", "/dashboard/:path*"],
 };
