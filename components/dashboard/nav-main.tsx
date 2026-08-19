@@ -1,8 +1,10 @@
+// src/components/dashboard/nav-main.tsx
 "use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type NavGroup } from "@/types/navigation";
+import { DynamicIcon } from "./dynamic-icon";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -54,7 +56,8 @@ export function NavMain({ groups }: NavMainProps) {
                     <SidebarMenuItem>
                       <CollapsibleTrigger asChild>
                         <SidebarMenuButton tooltip={item.title}>
-                          <item.icon className="size-4 shrink-0" />
+                          {/* Render icon via string key lookup */}
+                          <DynamicIcon name={item.icon} />
                           <span className="flex-1 text-sm font-medium">
                             {item.title}
                           </span>
@@ -98,7 +101,8 @@ export function NavMain({ groups }: NavMainProps) {
                     tooltip={item.title}
                   >
                     <Link href={item.href}>
-                      <item.icon className="size-4 shrink-0" />
+                      {/* Render icon via string key lookup */}
+                      <DynamicIcon name={item.icon} />
                       <span className="flex-1 text-sm font-medium">
                         {item.title}
                       </span>

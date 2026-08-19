@@ -1,15 +1,4 @@
-import {
-  LayoutDashboard,
-  Package,
-  ShoppingCart,
-  Users,
-  CreditCard,
-  Settings,
-  Wrench,
-  BarChart3,
-  ShieldCheck,
-  FileText,
-} from "lucide-react";
+// src/config/navigation.config.ts
 import { type DashboardNavigationConfig } from "@/types/navigation";
 
 export const customerNavigation: DashboardNavigationConfig = {
@@ -22,11 +11,11 @@ export const customerNavigation: DashboardNavigationConfig = {
     {
       groupLabel: "Overview",
       items: [
-        { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+        { title: "Dashboard", href: "/dashboard", icon: "LayoutDashboard" },
         {
           title: "My Orders",
           href: "/dashboard/orders",
-          icon: ShoppingCart,
+          icon: "ShoppingCart",
           badge: 2,
         },
       ],
@@ -34,7 +23,7 @@ export const customerNavigation: DashboardNavigationConfig = {
     {
       groupLabel: "Account",
       items: [
-        { title: "Settings", href: "/dashboard/settings", icon: Settings },
+        { title: "Settings", href: "/dashboard/settings", icon: "Settings" },
       ],
     },
   ],
@@ -53,13 +42,13 @@ export const providerNavigation: DashboardNavigationConfig = {
         {
           title: "Dashboard",
           href: "/dashboard/provider",
-          icon: LayoutDashboard,
+          icon: "LayoutDashboard",
         },
-        { title: "Gears", href: "/dashboard/provider/gears", icon: Wrench },
+        { title: "Gears", href: "/dashboard/provider/gears", icon: "Wrench" },
         {
           title: "Orders",
           href: "/dashboard/provider/orders",
-          icon: Package,
+          icon: "Package",
           badge: 5,
         },
       ],
@@ -70,7 +59,7 @@ export const providerNavigation: DashboardNavigationConfig = {
         {
           title: "Performance",
           href: "/dashboard/provider/analytics",
-          icon: BarChart3,
+          icon: "BarChart3",
         },
       ],
     },
@@ -86,23 +75,31 @@ export const adminNavigation: DashboardNavigationConfig = {
     {
       groupLabel: "Administration",
       items: [
-        { title: "Overview", href: "/dashboard/admin", icon: LayoutDashboard },
-        { title: "Users", href: "/dashboard/admin/users", icon: Users },
+        {
+          title: "Overview",
+          href: "/dashboard/admin",
+          icon: "LayoutDashboard",
+        },
+        { title: "Users", href: "/dashboard/admin/users", icon: "Users" },
         {
           title: "Transactions",
           href: "/dashboard/admin/transactions",
-          icon: CreditCard,
+          icon: "CreditCard",
         },
       ],
     },
     {
       groupLabel: "System",
       items: [
-        { title: "Audit Logs", href: "/dashboard/admin/logs", icon: FileText },
+        {
+          title: "Audit Logs",
+          href: "/dashboard/admin/logs",
+          icon: "FileText",
+        },
         {
           title: "Security",
           href: "/dashboard/admin/security",
-          icon: ShieldCheck,
+          icon: "ShieldCheck",
         },
       ],
     },

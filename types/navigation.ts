@@ -1,4 +1,16 @@
-import { type LucideIcon } from "lucide-react";
+// src/types/navigation.ts
+
+export type IconName =
+  | "LayoutDashboard"
+  | "ShoppingCart"
+  | "Settings"
+  | "Package"
+  | "Wrench"
+  | "BarChart3"
+  | "Users"
+  | "CreditCard"
+  | "FileText"
+  | "ShieldCheck";
 
 export interface NavSubItem {
   title: string;
@@ -9,7 +21,7 @@ export interface NavSubItem {
 export interface NavItem {
   title: string;
   href: string;
-  icon: LucideIcon;
+  icon: IconName; // 👈 Serialized string key instead of component
   badge?: string | number;
   items?: NavSubItem[];
 }
