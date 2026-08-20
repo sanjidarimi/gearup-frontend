@@ -1,12 +1,16 @@
 import { Navbar } from "@/components/navbar/navbar";
 import { Footer } from "@/components/shared/Footer";
-import { Hero } from "@/components/ui/hero";
+import React from "react";
 
-export default function Home() {
+export default function publicLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <>
       <Navbar />
-      <Hero />
+      {children};
       <Footer />
     </>
   );
