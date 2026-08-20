@@ -1,4 +1,8 @@
-interface Gear {
+export interface GearCategory {
+  id: string;
+  name: string;
+}
+export interface Gear {
   id: string;
   name: string;
   price: string;
@@ -7,7 +11,7 @@ interface Gear {
   stock: number;
   imageUrl: string;
   isAvailable: boolean;
-  category: string;
+  category: GearCategory;
 }
 
 export interface GearResponse {

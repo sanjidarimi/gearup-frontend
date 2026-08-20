@@ -1,5 +1,3 @@
-// src/types/navigation.ts
-
 export type IconName =
   | "LayoutDashboard"
   | "ShoppingCart"
@@ -21,7 +19,7 @@ export interface NavSubItem {
 export interface NavItem {
   title: string;
   href: string;
-  icon: IconName; // 👈 Serialized string key instead of component
+  icon: IconName;
   badge?: string | number;
   items?: NavSubItem[];
 }

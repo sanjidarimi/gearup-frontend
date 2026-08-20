@@ -1,4 +1,4 @@
-// src/components/dashboard/dynamic-icon.tsx
+
 import {
   LayoutDashboard,
   ShoppingCart,

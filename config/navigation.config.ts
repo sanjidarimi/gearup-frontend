@@ -1,4 +1,3 @@
-// src/config/navigation.config.ts
 import { type DashboardNavigationConfig } from "@/types/navigation";
 
 export const customerNavigation: DashboardNavigationConfig = {

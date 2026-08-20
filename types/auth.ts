@@ -22,7 +22,7 @@ export interface IUserProfile {
 export interface RegisterState {
   error?: string | null;
   success?: boolean;
-  message?:string
+  message?: string;
 }
 export interface LoginState {
   error?: string | null;
