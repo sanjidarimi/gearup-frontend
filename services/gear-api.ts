@@ -1,10 +1,11 @@
 import { apiFetch } from "@/lib/api";
-interface GearResponse {
-  id: string;
-  name : string, 
-  price : string
-}
-export const getGear = () => {
-  const res = apiFetch<GearResponse>("/gear");
+import { GearResponse, SingleGearResponse } from "@/types/gear";
+
+export const getGear = async () => {
+  const res = await apiFetch<GearResponse>("/gear");
   return res;
+};
+
+export const getGearById = async (id: string): Promise<SingleGearResponse> => {
+  return await apiFetch<SingleGearResponse>(`/gear/${id}`);
 };

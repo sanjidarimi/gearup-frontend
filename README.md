@@ -1,6 +1,6 @@
 # 🏋️ GearUp Frontend
 
-> A modern, responsive, and scalable sports & outdoor equipment rental platform built with **Next.js 15**, **TypeScript**, **Tailwind CSS**, **Shadcn UI**, and **TanStack Query**.
+> A modern, responsive, and scalable sports & outdoor equipment rental platform built with **Next.js 16**, **TypeScript**, **Tailwind CSS**, **Shadcn UI**, and **TanStack Query**.
 
 ---
 
@@ -99,21 +99,21 @@ Supported Roles
 
 # 🛠 Tech Stack
 
-| Category | Technology |
-|----------|------------|
-| Framework | Next.js 15 (App Router) |
-| Language | TypeScript |
-| Styling | Tailwind CSS |
-| UI Library | Shadcn UI |
-| State Management | TanStack Query |
-| Forms | React Hook Form |
-| Validation | Zod |
-| HTTP Client | Axios |
-| Notifications | Sonner |
-| Date Picker | React Day Picker |
-| Charts | Recharts |
-| Icons | Lucide React |
-| Utilities | date-fns |
+| Category         | Technology              |
+| ---------------- | ----------------------- |
+| Framework        | Next.js 15 (App Router) |
+| Language         | TypeScript              |
+| Styling          | Tailwind CSS            |
+| UI Library       | Shadcn UI               |
+| State Management | TanStack Query          |
+| Forms            | React Hook Form         |
+| Validation       | Zod                     |
+| HTTP Client      | Axios                   |
+| Notifications    | Sonner                  |
+| Date Picker      | React Day Picker        |
+| Charts           | Recharts                |
+| Icons            | Lucide React            |
+| Utilities        | date-fns                |
 
 ---
 
@@ -417,14 +417,14 @@ Supported Roles
 
 # 🎯 Rental Status
 
-| Status | Badge Color |
-|----------|-------------|
-| PLACED | Orange |
-| CONFIRMED | Blue |
-| PAID | Purple |
-| PICKED_UP | Green |
-| RETURNED | Gray |
-| CANCELLED | Red |
+| Status    | Badge Color |
+| --------- | ----------- |
+| PLACED    | Orange      |
+| CONFIRMED | Blue        |
+| PAID      | Purple      |
+| PICKED_UP | Green       |
+| RETURNED  | Gray        |
+| CANCELLED | Red         |
 
 ---
 
