@@ -1,10 +1,8 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
-
 import useEmblaCarousel from "embla-carousel-react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
-
 import { Button } from "@/components/ui/button";
 import { Gear } from "@/types/gear";
 import { GearCard } from "./gear-card";

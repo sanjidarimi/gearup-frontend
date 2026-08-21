@@ -1,5 +1,4 @@
 "use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { Tag, ArrowUpRight, CheckCircle2, XCircle } from "lucide-react";
