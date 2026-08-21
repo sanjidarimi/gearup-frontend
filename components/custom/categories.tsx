@@ -1,27 +1,26 @@
 "use client";
 
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { useCategory } from "@/features/category/queries";
 import { Category } from "@/types/category";
 import useEmblaCarousel from "embla-carousel-react";
-import { useCallback, useEffect, useState } from "react";
 import {
-  Layers,
-  Tent,
   Bike,
-  Waves,
-  Compass,
-  Footprints,
-  Snowflake,
-  Flame,
   ChevronLeft,
   ChevronRight,
+  Compass,
   Dumbbell,
-  Trophy,
-  ShieldAlert,
+  Flame,
+  Footprints,
+  Layers,
   LucideIcon,
+  ShieldAlert,
+  Snowflake,
+  Tent,
+  Trophy,
+  Waves,
 } from "lucide-react";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 import { CategoriesSkeleton } from "../shared/categories-skeleton";
 
 const CATEGORY_ICON_MAP: Record<string, LucideIcon> = {
@@ -46,10 +45,9 @@ function getCategoryIcon(name: string): LucideIcon {
 
 export function Categories() {
   const { data, isLoading, isError } = useCategory();
-  const searchParams = useSearchParams();
-  const activeCategory = searchParams.get("category");
 
   const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
     align: "start",
     dragFree: true,
     containScroll: "trimSnaps",
@@ -107,7 +105,7 @@ export function Categories() {
     <section className="w-full space-y-3 container mx-auto">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <h2 className="text-2xl font-semibold tracking-wider ">
             Browse by Category
           </h2>
           <span className="text-xs text-muted-foreground">
@@ -138,17 +136,11 @@ export function Categories() {
       <div className="relative overflow-hidden" ref={emblaRef}>
         <div className="flex gap-2">
           <div className="flex-[0_0_auto]">
-            <CategoryTile
-              href="/gear"
-              label="All Gear"
-              Icon={Layers}
-              isActive={!activeCategory}
-            />
+            <CategoryTile href="/gear" label="All Gear" Icon={Layers} />
           </div>
 
           {categories.map((cat) => {
             const Icon = getCategoryIcon(cat.name);
-            const isActive = activeCategory === cat.name;
 
             return (
               <div key={cat.id ?? cat.name} className="flex-[0_0_auto]">
@@ -156,7 +148,6 @@ export function Categories() {
                   href={`/gear?category=${encodeURIComponent(cat.name)}`}
                   label={cat.name}
                   Icon={Icon}
-                  isActive={isActive}
                 />
               </div>
             );
@@ -171,25 +162,16 @@ interface CategoryTileProps {
   href: string;
   label: string;
   Icon: LucideIcon;
-  isActive: boolean;
 }
 
-function CategoryTile({ href, label, Icon, isActive }: CategoryTileProps) {
+function CategoryTile({ href, label, Icon }: CategoryTileProps) {
   return (
     <Link
       href={href}
-      className={`group flex min-w-27 sm:min-w-32 flex-col items-center justify-center gap-1.5 rounded-xl border p-3 text-center transition-all duration-150 ease-in-out hover:border-primary/50 hover:bg-accent hover:shadow-sm ${
-        isActive
-          ? "border-primary bg-primary/10 text-primary ring-1 ring-primary/20"
-          : "border-border bg-card text-card-foreground hover:text-accent-foreground"
-      }`}
+      className={`group flex min-w-27 sm:min-w-32 flex-col items-center justify-center gap-1.5 rounded-xl border p-3 text-center transition-all duration-150 ease-in-out hover:border-primary hover:bg-primary/10 hover:shadow-sm`}
     >
       <Icon
-        className={`h-5 w-5 transition-transform duration-150 group-hover:scale-110 ${
-          isActive
-            ? "text-primary"
-            : "text-muted-foreground group-hover:text-primary"
-        }`}
+        className={`h-5 w-5 transition-transform duration-150 group-hover:scale-110`}
       />
       <span className="truncate text-xs font-medium leading-none max-w-25">
         {label}
