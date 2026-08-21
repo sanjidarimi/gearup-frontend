@@ -1,4 +1,5 @@
 import { Categories } from "@/components/custom/categories";
+import { ContactSection } from "@/components/custom/contact-section";
 import { HowItWorks } from "@/components/custom/how-it-works";
 import { FeaturedGearSection } from "@/components/gears/featured-gear-section";
 import { Navbar } from "@/components/navbar/navbar";
@@ -16,6 +17,7 @@ export default function Home() {
       />
       <Categories />
       <HowItWorks />
+      <ContactSection />
       <Footer />
     </>
   );

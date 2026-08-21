@@ -145,10 +145,8 @@ export function HowItWorks() {
           </p>
         </div>
 
-        {/* --- SECTION 1: WAVY ROADMAP TIMELINE --- */}
         <div className="relative mt-16">
-          {/* Curved Wave Line for Large Displays */}
-          <div className="hidden lg:block absolute top-[4.5rem] left-[8%] right-[8%] h-24 pointer-events-none">
+          <div className="hidden lg:block absolute top-18 left-[8%] right-[8%] h-24 pointer-events-none">
             <svg
               className="w-full h-full text-border"
               viewBox="0 0 1000 100"
@@ -174,14 +172,11 @@ export function HowItWorks() {
                     idx % 2 === 1 ? "lg:translate-y-6" : ""
                   }`}
                 >
-                  {/* Step Card Wrapper */}
                   <div className="relative flex h-full w-full flex-col items-center rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-300 group-hover:border-primary/40 group-hover:shadow-md">
-                    {/* Number Badge */}
                     <span className="absolute top-3 right-3 text-[10px] font-mono font-bold text-muted-foreground/60">
                       {step.number}
                     </span>
 
-                    {/* Node Icon */}
                     <div className="relative mb-4 flex h-12 w-12 items-center justify-center rounded-xl border border-border bg-background text-foreground transition-all duration-300 group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-lg group-hover:shadow-primary/25">
                       <Icon className="h-5 w-5" />
                     </div>
@@ -199,14 +194,12 @@ export function HowItWorks() {
           </div>
         </div>
 
-        {/* --- SECTION 2: VALUE PROPOSITION TABS --- */}
         <div className="mt-28 space-y-8">
           <div className="flex flex-col items-center justify-center gap-4 text-center">
             <h3 className="text-xl font-bold tracking-tight">
               Built for Everyone in the Outdoors
             </h3>
 
-            {/* Segmented Control */}
             <div className="inline-flex rounded-xl border border-border bg-muted/50 p-1">
               <button
                 onClick={() => setActiveTab("renter")}
@@ -231,7 +224,6 @@ export function HowItWorks() {
             </div>
           </div>
 
-          {/* Benefits Grid */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {(activeTab === "renter" ? RENTER_BENEFITS : PROVIDER_BENEFITS).map(
               (item) => {
