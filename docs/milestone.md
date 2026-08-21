@@ -198,6 +198,24 @@ ADMIN
 * How it works
 * CTA
 
+##### Categories
+
+* Cycling Gear
+* Camping & Trekking
+* Water Sports
+* Winter Expeditions
+
+Category filtering dynamically displays gear matching the selected category. Categories are shown as filter buttons in the gear catalog and on the home page for quick browsing.
+
+##### How it works
+
+* Browse gear by category or search
+* Select rental dates
+* Reserve and pay securely
+* Provider approval
+* Pick up gear
+* Return and receive refund
+
 #### Gear
 
 * Gear grid
