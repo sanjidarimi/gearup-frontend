@@ -14,7 +14,10 @@ export function FeaturedGearSection({
   title = "Featured Gear",
   subtitle = "High-demand professional equipment ready for deployment",
 }: FeaturedGearSectionProps) {
-  const { data, isLoading, isError, refetch } = useGears();
+  const { data, isLoading, isError, refetch } = useGears({});
+  console.log("original data", data);
+  const gearItem = data?.data;
+  console.log("from fearture section", gearItem);
 
   if (isLoading) {
     return (
@@ -65,9 +68,7 @@ export function FeaturedGearSection({
     );
   }
 
-  const gearItems = Array.isArray(data) ? data : data?.data || [];
-
-  if (!gearItems || gearItems.length === 0) {
+  if (!gearItem || gearItem.length === 0) {
     return (
       <div className="rounded-xl border border-border bg-card p-8 text-center text-muted-foreground">
         No gear available at the moment.
@@ -76,6 +77,6 @@ export function FeaturedGearSection({
   }
 
   return (
-    <FeaturedGearCarousel items={gearItems} title={title} subtitle={subtitle} />
+    <FeaturedGearCarousel items={gearItem} title={title} subtitle={subtitle} />
   );
 }

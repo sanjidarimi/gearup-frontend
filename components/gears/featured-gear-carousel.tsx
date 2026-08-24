@@ -24,7 +24,6 @@ export function FeaturedGearCarousel({
     skipSnaps: false,
     dragFree: false,
   });
-
   const [canScrollPrev, setCanScrollPrev] = React.useState(false);
   const [canScrollNext, setCanScrollNext] = React.useState(false);
 
@@ -87,7 +86,7 @@ export function FeaturedGearCarousel({
 
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="-ml-4 flex">
-          {items.map((item) => (
+          {items?.map((item) => (
             <div
               key={item.id}
               className="min-w-0 shrink-0 grow-0 pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
