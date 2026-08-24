@@ -1,6 +1,6 @@
 "use client";
 
-import { useCategory } from "@/features/category/queries";
+import { useCategory } from "@/hooks/category/queries";
 import { Category } from "@/types/category";
 import useEmblaCarousel from "embla-carousel-react";
 import {

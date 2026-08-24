@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useGears } from "@/features/gear/queries";
+import { useGears } from "@/hooks/gear/queries";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import { FeaturedGearCarousel } from "./featured-gear-carousel";
 

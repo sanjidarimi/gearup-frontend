@@ -1,8 +1,9 @@
+// app/gear/page.tsx
 "use client";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useMemo } from "react";
 
-import { useGears } from "@/features/gear/queries";
+import { GearCard } from "@/components/gears/gear-card";
+import { useGears } from "@/hooks/gear/queries";
+import { Gear } from "@/types/gear";
 import {
   AlertCircle,
   ChevronLeft,
@@ -12,7 +13,8 @@ import {
   Search,
   SlidersHorizontal,
 } from "lucide-react";
-import { GearCard } from "./[id]/page";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useMemo } from "react";
 
 const CATEGORIES = [
   "All",
@@ -35,7 +37,6 @@ export default function GearPage() {
   const isAvailable = searchParams.get("isAvailable") ?? "true";
   const page = Number(searchParams.get("page") ?? "1");
 
-  // ব্যাকএন্ড ফিল্টার অবজেক্ট তৈরি
   const filterParams = useMemo(
     () => ({
       search,
@@ -69,18 +70,15 @@ export default function GearPage() {
     [searchParams, pathname, router],
   );
 
-  const resetFilters = () => {
-    router.push(pathname);
-  };
+  const resetFilters = () => router.push(pathname);
 
-  // Response Extract
   const gearsList = Array.isArray(data) ? data : (data?.data ?? []);
   const totalPages = data?.meta?.totalPages ?? 1;
 
   return (
     <main className="min-h-screen bg-background px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl space-y-8">
-        {/* Banner Section */}
+        {/* Header */}
         <section className="relative overflow-hidden rounded-3xl border border-border bg-card p-8 sm:p-12">
           <div className="relative z-10 max-w-2xl space-y-3">
             <span className="inline-block text-xs font-semibold uppercase tracking-widest text-primary">
@@ -96,9 +94,8 @@ export default function GearPage() {
           </div>
         </section>
 
-        {/* Search & Main Layout Grid */}
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
-          {/* Sidebar Filters */}
+          {/* Filters Sidebar */}
           <aside className="space-y-6 rounded-2xl border border-border bg-card p-5 h-fit">
             <div className="flex items-center justify-between pb-3 border-b border-border">
               <div className="flex items-center gap-2 font-semibold text-sm text-foreground">
@@ -131,7 +128,6 @@ export default function GearPage() {
               </select>
             </div>
 
-            {/* Category Filter */}
             <div className="space-y-2">
               <label className="text-xs font-medium text-muted-foreground">
                 Category
@@ -148,6 +144,7 @@ export default function GearPage() {
                 ))}
               </select>
             </div>
+
             <div className="space-y-2">
               <label className="text-xs font-medium text-muted-foreground">
                 Price Range ($)
@@ -176,9 +173,8 @@ export default function GearPage() {
             </div>
           </aside>
 
-          {/* Catalog View */}
+          {/* List Area */}
           <div className="space-y-6 lg:col-span-3">
-            {/* Search Input Bar */}
             <div className="relative w-full">
               <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
@@ -190,19 +186,17 @@ export default function GearPage() {
               />
             </div>
 
-            {/* Loading State */}
             {isLoading && (
-              <div className="flex min-h-[300px] flex-col items-center justify-center gap-3">
+              <div className="flex min-h-75 flex-col items-center justify-center gap-3">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 <p className="text-sm text-muted-foreground">
-                  Fetching equipment catalog...
+                  Fetching gears data...
                 </p>
               </div>
             )}
 
-            {/* Error State */}
             {isError && (
-              <div className="flex min-h-[300px] flex-col items-center justify-center gap-2 rounded-2xl border border-destructive/20 bg-destructive/5 p-6 text-center">
+              <div className="flex min-h-75 flex-col items-center justify-center gap-2 rounded-2xl border border-destructive/20 bg-destructive/5 p-6 text-center">
                 <AlertCircle className="h-8 w-8 text-destructive" />
                 <h3 className="text-base font-semibold text-foreground">
                   Failed to load equipment
@@ -213,9 +207,8 @@ export default function GearPage() {
               </div>
             )}
 
-            {/* Empty State */}
             {!isLoading && !isError && gearsList.length === 0 && (
-              <div className="flex min-h-[300px] flex-col items-center justify-center rounded-2xl border border-dashed border-border p-12 text-center">
+              <div className="flex min-h-75 flex-col items-center justify-center rounded-2xl border border-dashed border-border p-12 text-center">
                 <p className="text-base font-medium text-foreground">
                   No gear found
                 </p>
@@ -233,7 +226,7 @@ export default function GearPage() {
 
             {!isLoading && !isError && gearsList.length > 0 && (
               <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                {gearsList.map((gear) => (
+                {gearsList.map((gear: Gear) => (
                   <GearCard key={gear.id} gear={gear} />
                 ))}
               </section>
