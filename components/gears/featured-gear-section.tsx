@@ -15,9 +15,9 @@ export function FeaturedGearSection({
   subtitle = "High-demand professional equipment ready for deployment",
 }: FeaturedGearSectionProps) {
   const { data, isLoading, isError, refetch } = useGears({});
-  console.log("original data", data);
+ 
   const gearItem = data?.data;
-  console.log("from fearture section", gearItem);
+
 
   if (isLoading) {
     return (
