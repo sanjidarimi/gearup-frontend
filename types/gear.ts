@@ -13,7 +13,10 @@ export interface Gear {
   isAvailable: boolean;
   category: GearCategory;
 }
-
+export type CreateGearPayload = Omit<
+  Gear,
+  "id" | "createdAt" | "updatedAt" | "providerId"
+>;
 export interface GearResponse {
   success: boolean;
   statusCode: number;
@@ -42,4 +45,10 @@ export interface GearFilterParams {
   isAvailable?: string;
   page?: number;
   limit?: number;
+}
+export interface ApiResponse<T> {
+  success: boolean;
+  statusCode: number;
+  message: string;
+  data: T;
 }

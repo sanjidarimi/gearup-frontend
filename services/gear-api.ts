@@ -1,5 +1,7 @@
 import { apiFetch } from "@/lib/api";
 import {
+  ApiResponse,
+  Gear,
   GearFilterParams,
   GearResponse,
   SingleGearResponse,
@@ -30,4 +32,25 @@ export const getGear = async (
 
 export const getGearById = async (id: string): Promise<SingleGearResponse> => {
   return await apiFetch<SingleGearResponse>(`/gear/${id}`);
+};
+
+export const gearApi = {
+  getProviderGears: async (): Promise<ApiResponse<Gear[]>> => {
+    return apiFetch<ApiResponse<Gear[]>>("/provider/gear", {
+      method: "GET",
+    });
+  },
+
+  createGear: async (payload: FormData): Promise<ApiResponse<Gear>> => {
+    return apiFetch<ApiResponse<Gear>>("/provider/gear", {
+      method: "POST",
+      body: payload,
+    });
+  },
+
+  deleteGear: async (id: string): Promise<ApiResponse<void>> => {
+    return apiFetch<ApiResponse<void>>(`/provider/gear/${id}`, {
+      method: "DELETE",
+    });
+  },
 };

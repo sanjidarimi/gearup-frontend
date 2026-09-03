@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
         hostname: "example.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
     ],
   },
 };
