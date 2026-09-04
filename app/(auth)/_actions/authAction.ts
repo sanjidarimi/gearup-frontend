@@ -17,15 +17,21 @@ export const registerUserAction = async (
   }
 
   if (password.length < 8) {
-    return { error: "Password must be at least 8 characters long.", success: false };
+    return {
+      error: "Password must be at least 8 characters long.",
+      success: false,
+    };
   }
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password, role }),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, role }),
+      },
+    );
 
     const result = await res.json();
 
@@ -55,11 +61,14 @@ export async function loginUserAction(
   }
 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      },
+    );
 
     const result = await res.json();
 
@@ -78,7 +87,7 @@ export async function loginUserAction(
         httpOnly: true,
         secure: isProduction,
         maxAge: 60 * 60 * 24,
-        sameSite: "lax",
+        sameSite: isProduction ? "none" : "lax",
         path: "/",
       });
     }
@@ -88,7 +97,7 @@ export async function loginUserAction(
         httpOnly: true,
         secure: isProduction,
         maxAge: 60 * 60 * 24 * 7,
-        sameSite: "lax",
+        sameSite: isProduction ? "none" : "lax",
         path: "/",
       });
     }
@@ -101,6 +110,9 @@ export async function loginUserAction(
     };
   } catch (error) {
     console.error("Login Error:", error);
-    return { error: "Network error or server unavailable. Please try again.", success: false };
+    return {
+      error: "Network error or server unavailable. Please try again.",
+      success: false,
+    };
   }
 }
