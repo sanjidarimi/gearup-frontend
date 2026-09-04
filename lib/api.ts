@@ -1,9 +1,15 @@
+"use server";
+import { cookies } from "next/headers";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const apiFetch = async <T>(
   endpoint: string,
   options?: RequestInit,
 ): Promise<T> => {
+  const cookie = await cookies();
+  const token = cookie.get("accessToken")?.value;
+
   const isFormData = options?.body instanceof FormData;
 
   const headers: Record<string, string> = {
@@ -12,6 +18,9 @@ export const apiFetch = async <T>(
 
   if (!isFormData && !headers["Content-Type"]) {
     headers["Content-Type"] = "application/json";
+  }
+  if (token?.length) {
+    headers["Authorization"] = token;
   }
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
