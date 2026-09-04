@@ -1,5 +1,6 @@
 import { Flame, ShieldCheck, Star, Users } from "lucide-react";
 import Image from "next/image";
+import { Suspense } from "react";
 import { RegisterForm } from "../_components/register-form";
 
 export default function RegisterPage() {
@@ -80,7 +81,9 @@ export default function RegisterPage() {
         </div>
       </div>
       <div className="flex flex-col justify-center py-12 lg:px-8">
-        <RegisterForm />
+        <Suspense>
+          <RegisterForm />
+        </Suspense>
       </div>
     </div>
   );
