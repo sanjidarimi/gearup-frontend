@@ -81,6 +81,11 @@ export const adminNavigation: DashboardNavigationConfig = {
         },
         { title: "Users", href: "/dashboard/admin/users", icon: "Users" },
         {
+          title: "Category",
+          href: "/dashboard/admin/category",
+          icon: "ChartColumnStacked",
+        },
+        {
           title: "Transactions",
           href: "/dashboard/admin/transactions",
           icon: "CreditCard",

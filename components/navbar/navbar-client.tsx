@@ -54,7 +54,7 @@ export function NavbarClient({ user }: NavbarClientProps) {
           },
           {
             label: "Add Gear",
-            href: "/dashboard/provider/gear/new",
+            href: "/dashboard/provider/gears",
             icon: PlusCircle,
           },
           { label: "Orders", href: "/dashboard/provider/orders", icon: Layers },

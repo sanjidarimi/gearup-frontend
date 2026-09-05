@@ -1,4 +1,3 @@
-
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -10,6 +9,7 @@ import {
   CreditCard,
   FileText,
   ShieldCheck,
+  ChartColumnStacked,
   HelpCircle,
   type LucideIcon,
 } from "lucide-react";
@@ -26,6 +26,7 @@ const iconMap: Record<IconName, LucideIcon> = {
   CreditCard,
   FileText,
   ShieldCheck,
+  ChartColumnStacked,
 };
 
 interface DynamicIconProps {

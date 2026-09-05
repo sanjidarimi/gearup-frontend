@@ -8,7 +8,8 @@ export type IconName =
   | "Users"
   | "CreditCard"
   | "FileText"
-  | "ShieldCheck";
+  | "ShieldCheck"
+  | "ChartColumnStacked";
 
 export interface NavSubItem {
   title: string;
