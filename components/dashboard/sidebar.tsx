@@ -6,34 +6,37 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarRail,
 } from "@/components/ui/sidebar";
+import type { IUserProfile } from "@/types/auth";
 import { type DashboardNavigationConfig } from "@/types/navigation";
 import { Dumbbell } from "lucide-react";
+import Link from "next/link";
 import { NavMain } from "./nav-main";
 import { NavUser } from "./nav-user";
-import Link from "next/link";
 
 interface DashboardSidebarProps {
   config: DashboardNavigationConfig;
+  user: IUserProfile;
 }
 
-export function DashboardSidebar({ config }: DashboardSidebarProps) {
+export function DashboardSidebar({ config, user }: DashboardSidebarProps) {
   return (
-    <Sidebar collapsible="icon" className="border-r border-border bg-sidebar">
+    <Sidebar collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <Dumbbell className="h-5 w-5" />
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm shadow-primary/30">
+                  <Dumbbell className="size-4" />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold text-sidebar-foreground">
-                    Gear Up
+                <div className="grid flex-1 text-left leading-tight">
+                  <span className="truncate text-sm font-extrabold">
+                    Gear<span className="text-primary">Up</span>
                   </span>
                   <span className="truncate text-xs text-muted-foreground">
-                    Enterprise
+                    {config.subtitle}
                   </span>
                 </div>
               </Link>
@@ -47,8 +50,9 @@ export function DashboardSidebar({ config }: DashboardSidebarProps) {
       </SidebarContent>
 
       <SidebarFooter>
-        <NavUser user={config.user} />
+        <NavUser user={user} />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }

@@ -1,28 +1,22 @@
 export type IconName =
   | "LayoutDashboard"
-  | "ShoppingCart"
-  | "Settings"
-  | "Package"
-  | "Wrench"
-  | "BarChart3"
-  | "Users"
+  | "ShoppingBag"
   | "CreditCard"
-  | "FileText"
-  | "ShieldCheck"
-  | "ChartColumnStacked";
-
-export interface NavSubItem {
-  title: string;
-  href: string;
-  badge?: string | number;
-}
+  | "Star"
+  | "UserCircle"
+  | "Package"
+  | "PlusCircle"
+  | "ClipboardList"
+  | "Users"
+  | "Tags"
+  | "Boxes"
+  | "Receipt";
 
 export interface NavItem {
   title: string;
   href: string;
   icon: IconName;
-  badge?: string | number;
-  items?: NavSubItem[];
+  exact?: boolean;
 }
 
 export interface NavGroup {
@@ -30,13 +24,9 @@ export interface NavGroup {
   items: NavItem[];
 }
 
-export interface UserProfile {
-  name: string;
-  email: string;
-  avatarUrl?: string;
-}
-
 export interface DashboardNavigationConfig {
-  user: UserProfile;
+  title: string;
+  subtitle: string;
+  homeHref: string;
   navGroups: NavGroup[];
 }
