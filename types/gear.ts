@@ -1,39 +1,23 @@
 export interface GearCategory {
-  id: string;
+  id?: string;
   name: string;
 }
+
 export interface Gear {
   id: string;
   name: string;
-  price: string;
-  brand: string;
+  description?: string;
+  brand: string | null;
   pricePerDay: number;
   stock: number;
-  imageUrl: string;
+  imageUrl: string | null;
   isAvailable: boolean;
-  category: GearCategory;
-}
-export type CreateGearPayload = Omit<
-  Gear,
-  "id" | "createdAt" | "updatedAt" | "providerId"
->;
-export interface GearResponse {
-  success: boolean;
-  statusCode: number;
-  message: string;
-  data: {
-    data: Gear[];
-    meta?: GearMeta;
-  };
-}
-export interface SingleGearResponse {
-  data: Gear;
-}
-export interface GearMeta {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
+  categoryId?: string;
+  providerId?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  category?: GearCategory;
+  provider?: { id: string; name: string; email?: string };
 }
 
 export interface GearFilterParams {
@@ -46,9 +30,14 @@ export interface GearFilterParams {
   page?: number;
   limit?: number;
 }
-export interface ApiResponse<T> {
-  success: boolean;
-  statusCode: number;
-  message: string;
-  data: T;
+
+export interface GearPayload {
+  name: string;
+  description: string;
+  brand: string;
+  pricePerDay: number;
+  stock: number;
+  isAvailable: boolean;
+  categoryId: string;
+  imageUrl?: string;
 }
