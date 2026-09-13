@@ -1,17 +1,14 @@
 "use client";
 
-import { useSession } from "@/components/session-provider";
 import { EmptyState } from "@/components/shared/empty-state";
 import { StarRating } from "@/components/shared/star-rating";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGearReviews } from "@/hooks/gear/queries";
 import { formatDate, initials } from "@/lib/format";
-import { Lock, MessageSquareText } from "lucide-react";
-import Link from "next/link";
+import { MessageSquareText, RefreshCw } from "lucide-react";
 
 export function GearReviews({ gearId }: { gearId: string }) {
-  const user = useSession();
-  const { data, isLoading, isError } = useGearReviews(gearId);
+  const { data, isLoading, isError, refetch } = useGearReviews(gearId);
 
   return (
     <section aria-labelledby="reviews-heading" className="space-y-5">
@@ -42,21 +39,16 @@ export function GearReviews({ gearId }: { gearId: string }) {
           ))}
         </div>
       ) : isError ? (
-        <div className="flex items-center gap-3 rounded-2xl border border-border bg-muted/40 p-5 text-sm text-muted-foreground">
-          <Lock className="size-5 shrink-0 text-primary" />
-          {user ? (
-            <span>Reviews are visible to customer accounts.</span>
-          ) : (
-            <span>
-              <Link
-                href={`/auth/login?redirect=/gear/${gearId}`}
-                className="font-semibold text-primary hover:underline"
-              >
-                Sign in
-              </Link>{" "}
-              to read what other renters say about this gear.
-            </span>
-          )}
+        <div className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-muted/40 p-5 text-sm text-muted-foreground">
+          <span>Reviews couldn&apos;t be loaded right now.</span>
+          <button
+            type="button"
+            onClick={() => refetch()}
+            className="inline-flex items-center gap-1.5 font-semibold text-primary hover:underline"
+          >
+            <RefreshCw className="size-4" />
+            Try again
+          </button>
         </div>
       ) : !data || data.reviews.length === 0 ? (
         <EmptyState

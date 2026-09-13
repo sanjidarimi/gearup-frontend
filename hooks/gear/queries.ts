@@ -44,8 +44,8 @@ export function useGear(id: string) {
   });
 }
 
-// The reviews route sits behind customer auth on the backend, so guests get
-// a 401 here. Keep it silent instead of bouncing them to the login page.
+// Gear reviews are public. Keep failures silent so a hiccup here never
+// bounces a guest to the login page while they browse.
 export function useGearReviews(id: string) {
   return useQuery({
     queryKey: gearKeys.reviews(id),

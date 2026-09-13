@@ -169,10 +169,12 @@ proxy.ts        role-based route protection
 | Admin rentals                     | `GET /admin/rentals`                               |
 | Admin gear / categories           | `GET /gear`, `GET/POST /categories`                |
 
-### Notes on the current backend
+### Notes on the backend
 
-- The **admin user and rental endpoints** aren't in `gearup-backend` yet. Those admin views show a clear "API not available" state until the routes exist.
-- The backend mounts customer auth in front of `/api/review`, so **public review reads need a customer login**. Guests see a sign-in prompt instead of an error.
+- The **admin endpoints** (`/admin/users`, `/admin/rentals`) require an `ADMIN` token. If you point the app at an older backend without them, those views show an "API not available" state instead of crashing.
+- **Gear reviews are public**, so guests can read them on `/gear/[id]`.
+- The **payment success page** calls `GET /payment/confirm`, which also marks the order `PAID` once Stripe reports the session as paid. The webhook still works in production. Locally you don't need the Stripe CLI to see paid orders.
+- Provider order actions follow `PLACED → CONFIRMED → PAID → PICKED_UP → RETURNED`. Cancelling or returning puts the stock back.
 - Image **uploads** use the backend's Cloudinary account. Pasting an image URL works without it.
 
 ---
