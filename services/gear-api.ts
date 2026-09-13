@@ -1,56 +1,21 @@
-import { apiFetch } from "@/lib/api";
-import {
-  ApiResponse,
-  Gear,
-  GearFilterParams,
-  GearResponse,
-  SingleGearResponse,
-} from "@/types/gear";
-
-export const getGear = async (
-  params: GearFilterParams,
-): Promise<GearResponse> => {
-  const queryParams = new URLSearchParams();
-
-  if (params.search) queryParams.append("search", params.search);
-  if (params.category && params.category !== "All")
-    queryParams.append("category", params.category);
-  if (params.brand && params.brand !== "All")
-    queryParams.append("brand", params.brand);
-  if (params.minPrice) queryParams.append("minPrice", params.minPrice);
-  if (params.maxPrice) queryParams.append("maxPrice", params.maxPrice);
-  if (params.isAvailable && params.isAvailable !== "All")
-    queryParams.append("isAvailable", params.isAvailable);
-  if (params.page) queryParams.append("page", String(params.page));
-  if (params.limit) queryParams.append("limit", String(params.limit));
-
-  const queryString = queryParams.toString();
-  const endpoint = queryString ? `/gear?${queryString}` : "/gear";
-
-  return await apiFetch<GearResponse>(endpoint);
-};
-
-export const getGearById = async (id: string): Promise<SingleGearResponse> => {
-  return await apiFetch<SingleGearResponse>(`/gear/${id}`);
-};
+import { api } from "@/lib/api-client";
+import type { Paginated } from "@/types/api";
+import type { Gear, GearFilterParams } from "@/types/gear";
+import type { GearReviews } from "@/types/review";
 
 export const gearApi = {
-  getProviderGears: async (): Promise<ApiResponse<Gear[]>> => {
-    return apiFetch<ApiResponse<Gear[]>>("/provider/gear", {
-      method: "GET",
-    });
+  getAll: async (params: GearFilterParams = {}) => {
+    const response = await api<Paginated<Gear>>("/gear", { query: params });
+    return response.data;
   },
 
-  createGear: async (payload: FormData): Promise<ApiResponse<Gear>> => {
-    return apiFetch<ApiResponse<Gear>>("/provider/gear", {
-      method: "POST",
-      body: payload,
-    });
+  getById: async (id: string) => {
+    const response = await api<Gear>(`/gear/${id}`);
+    return response.data;
   },
 
-  deleteGear: async (id: string): Promise<ApiResponse<void>> => {
-    return apiFetch<ApiResponse<void>>(`/provider/gear/${id}`, {
-      method: "DELETE",
-    });
+  getReviews: async (gearId: string) => {
+    const response = await api<GearReviews>(`/review/gear/${gearId}`);
+    return response.data;
   },
 };

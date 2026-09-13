@@ -1,17 +1,17 @@
-import { apiFetch } from "@/lib/api";
-import { Category, CategoryApiResponse, ApiResponse } from "@/types/category";
+import { api } from "@/lib/api-client";
+import type { Category } from "@/types/category";
 
-export const getCategory = async (): Promise<Category[]> => {
-  const res = await apiFetch<CategoryApiResponse>("/categories");
+export const categoryApi = {
+  getAll: async () => {
+    const response = await api<Category[]>("/categories");
+    return response.data ?? [];
+  },
 
-  return res.data ?? [];
-};
-
-export const createCategory = async (
-  data: Record<string, string>,
-): Promise<ApiResponse<Category>> => {
-  return apiFetch<ApiResponse<Category>>("/categories", {
-    method: "POST",
-    body: JSON.stringify(data),
-  });
+  create: async (payload: { name: string }) => {
+    const response = await api<Category>("/categories", {
+      method: "POST",
+      body: payload,
+    });
+    return response.data;
+  },
 };
