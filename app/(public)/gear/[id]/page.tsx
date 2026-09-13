@@ -1,162 +1,205 @@
-import { getGearById } from "@/services/gear-api";
+import { GearGallery, type GalleryImage } from "@/components/gears/gear-gallery";
+import { GearReviews } from "@/components/gears/gear-reviews";
+import { RentalBookingCard } from "@/components/rental/rental-booking-card";
+import { AvailabilityBadge } from "@/components/shared/status-badge";
+import { formatCurrency, formatDate, shortId } from "@/lib/format";
+import { getCategoryVisual } from "@/lib/images";
+import { fetchCategories, fetchGearById } from "@/services/gear-server";
 import {
-  ArrowLeft,
-  CheckCircle2,
+  BadgeCheck,
+  ChevronRight,
   Clock,
-  Layers,
-  Package,
+  Handshake,
   ShieldCheck,
+  Store,
   Tag,
-  XCircle,
 } from "lucide-react";
-import Image from "next/image";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 interface GearDetailsPageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ from?: string; to?: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: GearDetailsPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const gear = await fetchGearById(id);
+
+  if (!gear) return { title: "Gear not found" };
+
+  return {
+    title: gear.name,
+    description:
+      gear.description?.slice(0, 155) ??
+      `Rent ${gear.name} for ${formatCurrency(gear.pricePerDay)} per day on GearUp.`,
+  };
 }
 
 export default async function GearDetailsPage({
   params,
+  searchParams,
 }: GearDetailsPageProps) {
-  const { id } = await params;
+  const [{ id }, query] = await Promise.all([params, searchParams]);
+  const [gear, categories] = await Promise.all([
+    fetchGearById(id),
+    fetchCategories(),
+  ]);
 
-  const response = await getGearById(id);
-  const gear = response?.data;
+  if (!gear) notFound();
 
-  if (!gear) {
-    notFound();
-  }
-
+  const categoryName =
+    gear.category?.name ??
+    categories.find((category) => category.id === gear.categoryId)?.name ??
+    null;
   const isAvailable = gear.isAvailable && gear.stock > 0;
 
-  return (
-    <main className="min-h-screen bg-background px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl space-y-6">
-        {/* Back Navigation */}
-        <Link
-          href="/gear"
-          className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to all gear
-        </Link>
+  const galleryImages: GalleryImage[] = [
+    { src: gear.imageUrl, alt: gear.name, isProductPhoto: true },
+    ...getCategoryVisual(categoryName)
+      .gallery.slice(0, 3)
+      .map((src) => ({
+        src,
+        alt: `${categoryName ?? "Outdoor"} gear in action`,
+        isProductPhoto: false,
+      })),
+  ];
 
-        {/* Main Product Card */}
-        <div className="grid grid-cols-1 gap-8 rounded-3xl border border-border bg-card p-6 lg:grid-cols-12 lg:p-10">
-          {/* Left Column: Image Preview */}
-          <div className="lg:col-span-6">
-            <div className="relative aspect-4/3 w-full overflow-hidden rounded-2xl border border-border/50 bg-muted sm:aspect-square">
-              <Image
-                src={gear.imageUrl || "/placeholder-gear.jpg"}
-                alt={gear.name}
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover"
-              />
-              <div className="absolute top-4 right-4">
-                {isAvailable ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1.5 text-xs font-semibold text-emerald-600 shadow-sm backdrop-blur-md">
-                    <CheckCircle2 className="h-3.5 w-3.5" />
-                    Available ({gear.stock} in stock)
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-background/90 px-3 py-1.5 text-xs font-semibold text-destructive shadow-sm backdrop-blur-md">
-                    <XCircle className="h-3.5 w-3.5" />
-                    Out of Stock
-                  </span>
-                )}
-              </div>
-            </div>
+  const specifications = [
+    { label: "Brand", value: gear.brand || "Independent brand" },
+    { label: "Category", value: categoryName ?? "Uncategorised" },
+    { label: "Daily rate", value: formatCurrency(gear.pricePerDay) },
+    { label: "Units in stock", value: String(gear.stock) },
+    { label: "Listed on", value: formatDate(gear.createdAt) },
+    { label: "Last updated", value: formatDate(gear.updatedAt) },
+    { label: "Reference", value: shortId(gear.id) },
+  ];
+
+  return (
+    <main className="px-4 pb-12 pt-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl space-y-6">
+        <nav
+          aria-label="Breadcrumb"
+          className="flex items-center gap-1.5 text-sm text-muted-foreground"
+        >
+          <Link href="/gear" className="transition-colors hover:text-foreground">
+            Gear
+          </Link>
+          {categoryName && (
+            <>
+              <ChevronRight className="size-3.5" />
+              <Link
+                href={`/gear?category=${encodeURIComponent(categoryName)}`}
+                className="transition-colors hover:text-foreground"
+              >
+                {categoryName}
+              </Link>
+            </>
+          )}
+          <ChevronRight className="size-3.5" />
+          <span className="truncate text-foreground">{gear.name}</span>
+        </nav>
+
+        <header className="space-y-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
+              <Tag className="size-3" />
+              {gear.brand || "Independent brand"}
+            </span>
+            <AvailabilityBadge available={isAvailable} />
+          </div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
+            {gear.name}
+          </h1>
+        </header>
+
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <GearGallery images={galleryImages} category={categoryName} />
           </div>
 
-          {/* Right Column: Information & Actions */}
-          <div className="flex flex-col justify-between space-y-6 lg:col-span-6">
-            <div className="space-y-6">
-              {/* Category & Brand Badge */}
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
-                  <Tag className="h-3 w-3" />
-                  {gear.brand}
-                </span>
-                <span className="text-xs font-medium text-muted-foreground">
-                  ID: {gear.id.slice(0, 8)}...
-                </span>
-              </div>
-
-              {/* Title & Description */}
-              <div className="space-y-3">
-                <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl lg:text-4xl">
-                  {gear.name}
-                </h1>
-                {/* <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-                  {gear?.description || "No description provided for this gear item."}
-                </p> */}
-              </div>
-
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <div className="flex items-center gap-3 rounded-2xl border border-border bg-background/50 p-3">
-                  <Package className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="text-[11px] font-medium text-muted-foreground">
-                      Available Stock
-                    </p>
-                    <p className="text-sm font-bold text-foreground">
-                      {gear.stock} Units
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3 rounded-2xl border border-border bg-background/50 p-3">
-                  <Layers className="h-5 w-5 text-primary" />
-                  <div>
-                    <p className="text-[11px] font-medium text-muted-foreground">
-                      Condition
-                    </p>
-                    <p className="text-sm font-bold text-foreground">
-                      Pro-Grade
-                    </p>
-                  </div>
-                </div>
-              </div>
+          <aside className="lg:col-span-5 lg:col-start-8 lg:row-span-2 lg:row-start-1">
+            <div className="lg:sticky lg:top-28">
+              <RentalBookingCard
+                gear={gear}
+                initialFrom={query.from}
+                initialTo={query.to}
+              />
             </div>
+          </aside>
 
-            <div className="space-y-4 border-t border-border pt-6">
-              <div className="flex items-baseline justify-between">
-                <div>
-                  <span className="text-xs font-medium text-muted-foreground">
-                    Rental Rate
+          <div className="space-y-10 lg:col-span-7">
+            <section aria-labelledby="about-heading" className="space-y-3">
+              <h2 id="about-heading" className="text-xl font-bold text-foreground">
+                About this gear
+              </h2>
+              <p className="whitespace-pre-line leading-relaxed text-muted-foreground">
+                {gear.description?.trim() ||
+                  "The provider hasn't added a description yet. Reach out after booking if you have questions about sizing or condition."}
+              </p>
+            </section>
+
+            <section aria-labelledby="specs-heading" className="space-y-3">
+              <h2 id="specs-heading" className="text-xl font-bold text-foreground">
+                Specifications
+              </h2>
+              <dl className="divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
+                {specifications.map((spec) => (
+                  <div
+                    key={spec.label}
+                    className="grid grid-cols-2 gap-4 px-5 py-3 text-sm"
+                  >
+                    <dt className="text-muted-foreground">{spec.label}</dt>
+                    <dd className="text-right font-medium text-foreground">
+                      {spec.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+
+            <section aria-labelledby="provider-heading" className="space-y-3">
+              <h2 id="provider-heading" className="text-xl font-bold text-foreground">
+                Provider
+              </h2>
+              <div className="rounded-2xl border border-border bg-card p-5">
+                <div className="flex items-center gap-4">
+                  <span className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                    <Store className="size-6" />
                   </span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-extrabold text-foreground">
-                      ${gear.pricePerDay}
-                    </span>
-                    <span className="text-sm font-medium text-muted-foreground">
-                      / day
-                    </span>
+                  <div>
+                    <p className="flex items-center gap-1.5 font-semibold text-foreground">
+                      {gear.provider?.name ?? "GearUp rental partner"}
+                      <BadgeCheck className="size-4 text-primary" />
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Verified provider
+                      {gear.providerId && ` · ID ${shortId(gear.providerId)}`}
+                    </p>
                   </div>
                 </div>
-                <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <Clock className="h-3.5 w-3.5" /> Instant booking confirmation
-                </span>
-              </div>
-
-              <div className="space-y-3">
-                <button
-                  disabled={!isAvailable}
-                  className="w-full rounded-2xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:opacity-95 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {isAvailable ? "Proceed to Booking" : "Currently Unavailable"}
-                </button>
-
-                <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
-                  <ShieldCheck className="h-4 w-4 text-emerald-500" />
-                  <span>Inspected and verified before every dispatch</span>
+                <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                  {[
+                    { icon: Clock, text: "Reviews each request personally" },
+                    { icon: Handshake, text: "In-person pickup and return" },
+                    { icon: ShieldCheck, text: "Paid securely via Stripe" },
+                  ].map(({ icon: Icon, text }) => (
+                    <div
+                      key={text}
+                      className="flex items-center gap-2 rounded-xl bg-muted/50 px-3 py-2.5 text-xs text-muted-foreground"
+                    >
+                      <Icon className="size-4 shrink-0 text-primary" />
+                      {text}
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            </section>
+
+            <GearReviews gearId={gear.id} />
           </div>
         </div>
       </div>
