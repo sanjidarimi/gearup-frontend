@@ -10,6 +10,10 @@ import {
 import { useAdminRentals, useAdminUsers } from "@/hooks/admin/queries";
 import { useCategories } from "@/hooks/category/queries";
 import { useGears } from "@/hooks/gear/queries";
+import { BreakdownBars } from "@/components/charts/breakdown-bars";
+import { MonthlyBarChart } from "@/components/charts/monthly-bar-chart";
+import { Skeleton } from "@/components/ui/skeleton";
+import { monthlyTotals } from "@/lib/chart-data";
 import { ROLE_LABEL } from "@/lib/constants";
 import { formatCurrency, formatRelative, initials, shortId } from "@/lib/format";
 import { orderTitle } from "@/lib/rental";
@@ -41,6 +45,11 @@ export function AdminOverview() {
     .reduce((sum, order) => sum + (order.payment?.amount ?? 0), 0);
   const activeUsers = userList.filter((user) => user.status === "ACTIVE").length;
   const apiMissing = users.isError || rentals.isError;
+  const rentalsByMonth = monthlyTotals(rentalList, (order) => order.createdAt);
+  const roleBreakdown = (["CUSTOMER", "PROVIDER", "ADMIN"] as const).map((role) => ({
+    label: `${ROLE_LABEL[role]}s`,
+    value: userList.filter((user) => user.role === role).length,
+  }));
 
   return (
     <>
@@ -93,6 +102,48 @@ export function AdminOverview() {
           hint="Completed Stripe payments"
           loading={rentals.isLoading}
         />
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-3">
+        <section className="rounded-2xl border border-border bg-card p-5 xl:col-span-2">
+          <div className="mb-4">
+            <h2 className="text-base font-semibold text-foreground">
+              Rentals, last 6 months
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              New rental orders placed on the platform each month
+            </p>
+          </div>
+          {rentals.isLoading ? (
+            <Skeleton className="h-60 w-full rounded-xl" />
+          ) : rentals.isError ? (
+            <p className="flex h-60 items-center justify-center rounded-xl bg-muted/40 text-sm text-muted-foreground">
+              Rental data is unavailable.
+            </p>
+          ) : (
+            <MonthlyBarChart
+              data={rentalsByMonth}
+              valueLabel="Rentals"
+              formatValue={(value) => value.toLocaleString("en-US")}
+            />
+          )}
+        </section>
+
+        <section className="rounded-2xl border border-border bg-card p-5">
+          <div className="mb-5">
+            <h2 className="text-base font-semibold text-foreground">Users by role</h2>
+            <p className="text-xs text-muted-foreground">Registered accounts</p>
+          </div>
+          {users.isLoading ? (
+            <Skeleton className="h-32 w-full rounded-xl" />
+          ) : users.isError ? (
+            <p className="rounded-xl bg-muted/40 p-6 text-center text-sm text-muted-foreground">
+              User data is unavailable.
+            </p>
+          ) : (
+            <BreakdownBars items={roleBreakdown} />
+          )}
+        </section>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">

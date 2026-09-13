@@ -14,7 +14,12 @@ import {
   useProviderOrders,
   useUpdateOrderStatus,
 } from "@/hooks/provider/queries";
+import { BreakdownBars } from "@/components/charts/breakdown-bars";
+import { MonthlyBarChart } from "@/components/charts/monthly-bar-chart";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getErrorMessage } from "@/lib/api-client";
+import { compactCurrency, monthlyTotals } from "@/lib/chart-data";
+import { RENTAL_FLOW, RENTAL_STATUS_META } from "@/lib/constants";
 import { formatCurrency, formatDay, formatRelative } from "@/lib/format";
 import {
   ArrowRight,
@@ -47,6 +52,16 @@ export function ProviderOverview() {
   const attentionGear = items
     .filter((item) => item.stock <= 1 || !item.isAvailable)
     .slice(0, 5);
+
+  const revenueByMonth = monthlyTotals(
+    list.filter((order) => ["PAID", "PICKED_UP", "RETURNED"].includes(order.status)),
+    (order) => order.createdAt,
+    (order) => order.totalAmount,
+  );
+  const statusBreakdown = [...RENTAL_FLOW, "CANCELLED" as const].map((status) => ({
+    label: RENTAL_STATUS_META[status].label,
+    value: list.filter((order) => order.status === status).length,
+  }));
 
   const updatingId = updateStatus.isPending ? updateStatus.variables?.id : undefined;
   const firstName = user?.name.split(" ")[0] ?? "there";
@@ -106,6 +121,41 @@ export function ProviderOverview() {
           hint="From paid and completed rentals"
           loading={orders.isLoading}
         />
+      </div>
+
+      <div className="grid gap-6 xl:grid-cols-3">
+        <section className="rounded-2xl border border-border bg-card p-5 xl:col-span-2">
+          <div className="mb-4">
+            <h2 className="text-base font-semibold text-foreground">
+              Revenue, last 6 months
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              Paid, picked up and returned rentals, grouped by order month
+            </p>
+          </div>
+          {orders.isLoading ? (
+            <Skeleton className="h-60 w-full rounded-xl" />
+          ) : (
+            <MonthlyBarChart
+              data={revenueByMonth}
+              valueLabel="Revenue"
+              formatValue={formatCurrency}
+              formatTick={compactCurrency}
+            />
+          )}
+        </section>
+
+        <section className="rounded-2xl border border-border bg-card p-5">
+          <div className="mb-5">
+            <h2 className="text-base font-semibold text-foreground">Orders by status</h2>
+            <p className="text-xs text-muted-foreground">All orders for your gear</p>
+          </div>
+          {orders.isLoading ? (
+            <Skeleton className="h-52 w-full rounded-xl" />
+          ) : (
+            <BreakdownBars items={statusBreakdown} />
+          )}
+        </section>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-3">
