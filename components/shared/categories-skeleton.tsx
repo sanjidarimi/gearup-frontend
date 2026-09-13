@@ -1,18 +1,19 @@
+import { Skeleton } from "@/components/ui/skeleton";
+
 export function CategoriesSkeleton() {
   return (
-    <div className="space-y-3 container mx-auto">
-      <div className="h-4 w-32 animate-pulse rounded bg-muted" />
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-        {Array.from({ length: 12 }).map((_, i) => (
-          <div
-            key={i}
-            className="flex h-16 flex-col items-center justify-center gap-2 rounded-xl border border-border bg-card p-3"
-          >
-            <div className="h-5 w-5 animate-pulse rounded-full bg-muted" />
-            <div className="h-2.5 w-12 animate-pulse rounded bg-muted" />
-          </div>
+    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div className="mb-8 space-y-3">
+        <Skeleton className="h-3 w-24" />
+        <Skeleton className="h-8 w-72" />
+        <Skeleton className="h-4 w-56" />
+      </div>
+      <div className="grid auto-rows-[150px] grid-cols-2 gap-4 sm:auto-rows-[190px] md:grid-cols-4">
+        <Skeleton className="col-span-2 row-span-2 rounded-2xl" />
+        {Array.from({ length: 7 }).map((_, index) => (
+          <Skeleton key={index} className="rounded-2xl" />
         ))}
       </div>
-    </div>
+    </section>
   );
 }

@@ -1,47 +1,37 @@
-// components/layout/footer.tsx
-"use client";
-
-import { ArrowUpRight, ShieldCheck, Sparkles } from "lucide-react";
+import { ShieldCheck, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { FaGithub, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
 
-interface FooterLink {
-  label: string;
-  href: string;
-  isExternal?: boolean;
-}
-
 interface FooterSection {
   title: string;
-  links: FooterLink[];
+  links: { label: string; href: string }[];
 }
 
 const footerNavigation: FooterSection[] = [
   {
     title: "Catalog",
     links: [
-      { label: "Cycling Gear", href: "/gear?category=Cycling" },
-      { label: "Camping & Trekking", href: "/gear?category=Camping" },
-      { label: "Water Sports", href: "/gear?category=Water" },
-      { label: "Winter Expeditions", href: "/gear?category=Winter" },
+      { label: "All gear", href: "/gear" },
+      { label: "Camping & Hiking", href: "/gear?category=Camping%20%26%20Hiking" },
+      { label: "Cycling", href: "/gear?category=Cycling" },
+      { label: "Water Sports", href: "/gear?category=Water%20Sports" },
     ],
   },
   {
     title: "Platform",
     links: [
-      { label: "How Rental Works", href: "/how-it-works" },
-      { label: "Damage Protection", href: "/protection" },
-      { label: "Enterprise Fleet", href: "/enterprise" },
-      { label: "Pricing Model", href: "/pricing" },
+      { label: "How rental works", href: "/#how-it-works" },
+      { label: "Become a provider", href: "/auth/register?role=PROVIDER" },
+      { label: "My dashboard", href: "/dashboard" },
+      { label: "Sign in", href: "/auth/login" },
     ],
   },
   {
-    title: "Company",
+    title: "Support",
     links: [
-      { label: "About Us", href: "/about" },
-      { label: "Sustainability", href: "/sustainability" },
-      { label: "Careers", href: "/careers" },
-      { label: "Contact Support", href: "/contact" },
+      { label: "Contact us", href: "/#contact" },
+      { label: "Secure payments", href: "/#how-it-works" },
+      { label: "Email support", href: "mailto:info@gearup.com" },
     ],
   },
 ];
@@ -55,23 +45,24 @@ const socialLinks = [
 
 export const Footer = () => {
   return (
-    <footer className="border-t border-border bg-background pt-16 pb-8">
+    <footer className="mt-16 border-t border-border bg-background pb-8 pt-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           <div className="space-y-6 lg:col-span-5">
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/50 px-3 py-1 text-xs font-medium text-foreground">
               <Sparkles className="h-3.5 w-3.5 text-primary" />
-              <span>Premium gear for ultimate exploration</span>
+              <span>Premium gear for every adventure</span>
             </div>
 
-            <p className="max-w-sm text-sm text-muted-foreground leading-relaxed">
-              Equipping athletes and explorers with professional-grade gear on
-              demand. Rent instantly, return flexibly.
+            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
+              GearUp connects outdoor lovers with local rental shops. Book the
+              gear you need for a weekend, pay securely, and hand it back when
+              you are done.
             </p>
 
             <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
               <ShieldCheck className="h-4 w-4 text-primary" />
-              <span>All rentals 100% verified & insured</span>
+              <span>Verified providers and Stripe-secured payments</span>
             </div>
           </div>
 
@@ -86,12 +77,9 @@ export const Footer = () => {
                     <li key={link.label}>
                       <Link
                         href={link.href}
-                        className="group inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-foreground"
+                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                       >
-                        <span>{link.label}</span>
-                        {link.isExternal && (
-                          <ArrowUpRight className="ml-0.5 h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-                        )}
+                        {link.label}
                       </Link>
                     </li>
                   ))}
@@ -101,19 +89,21 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-16 border-t border-border/60 pt-10 select-none overflow-hidden">
-          <h2 className="text-center font-extrabold tracking-tighter text-[13vw] sm:text-[14vw] leading-none  text-primary animate-pulse transition-colors duration-500">
+        <div className="mt-16 select-none overflow-hidden border-t border-border/60 pt-10">
+          <p
+            aria-hidden="true"
+            className="bg-linear-to-b from-primary/40 to-primary/5 bg-clip-text text-center text-[13vw] font-extrabold leading-none tracking-tighter text-transparent sm:text-[14vw]"
+          >
             GEAR UP
-          </h2>
+          </p>
         </div>
 
         <div className="mt-4 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} SportRent Inc. All rights
-            reserved.
+            &copy; {new Date().getFullYear()} GearUp. All rights reserved.
           </p>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             {socialLinks.map(({ icon: Icon, href, label }) => (
               <a
                 key={label}

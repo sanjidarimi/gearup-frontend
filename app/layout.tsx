@@ -1,11 +1,10 @@
 import { Providers } from "@/components/providers";
-
+import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -13,8 +12,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Gear Up",
-  description: "A gear and equipment rental platform for outdoor enthusiasts.",
+  title: {
+    default: "GearUp · Rent Sports & Outdoor Gear Instantly",
+    template: "%s · GearUp",
+  },
+  description:
+    "Rent kayaks, mountain bikes, tents and ski kits from verified local providers. Pick your dates, pay securely and hit the trail.",
 };
 
 export default function RootLayout({
@@ -28,7 +31,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn("h-full antialiased", "font-sans", inter.variable)}
     >
-      <body>
+      <body className="min-h-full">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

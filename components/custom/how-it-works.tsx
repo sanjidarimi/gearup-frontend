@@ -119,7 +119,10 @@ export function HowItWorks() {
   const [activeTab, setActiveTab] = useState<"renter" | "provider">("renter");
 
   return (
-    <section className="relative overflow-hidden bg-background py-24 text-foreground">
+    <section
+      id="how-it-works"
+      className="relative scroll-mt-24 overflow-hidden bg-background py-24 text-foreground"
+    >
       {/* Background Subtle Wave Accents */}
       <div className="pointer-events-none absolute inset-0 opacity-30">
         <div className="absolute top-1/4 -left-32 h-96 w-96 rounded-full bg-primary/20 blur-3xl" />

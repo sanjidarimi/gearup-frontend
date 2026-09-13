@@ -1,5 +1,4 @@
-"use client";
-
+import { Mail, MapPin, Phone } from "lucide-react";
 import {
   FaFacebook,
   FaInstagram,
@@ -7,100 +6,98 @@ import {
   FaWhatsapp,
 } from "react-icons/fa";
 
+const SOCIALS = [
+  { icon: FaFacebook, label: "Facebook", href: "https://facebook.com" },
+  { icon: FaLinkedin, label: "LinkedIn", href: "https://linkedin.com" },
+  { icon: FaWhatsapp, label: "WhatsApp", href: "https://wa.me/8801700000000" },
+  { icon: FaInstagram, label: "Instagram", href: "https://instagram.com" },
+];
+
 export function ContactSection() {
   return (
-    <section className="w-full bg-background pb-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="relative rounded-3xl bg-primary text-primary-foreground p-8 sm:p-12 overflow-hidden shadow-md">
-          <div className="flex flex-col lg:flex-row justify-between items-start gap-8 mb-12">
+    <section
+      id="contact"
+      className="w-full scroll-mt-24 bg-background px-4 pb-12 sm:px-6 lg:px-8"
+    >
+      <div className="mx-auto max-w-7xl">
+        <div className="relative overflow-hidden rounded-3xl bg-primary p-8 text-primary-foreground shadow-md sm:p-12">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-white/10 blur-2xl"
+          />
+
+          <div className="relative mb-12 flex flex-col items-start justify-between gap-8 lg:flex-row">
             <div className="max-w-xl space-y-3">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight">
-                CONTACTS
+              <h2 className="text-3xl font-black uppercase tracking-tight sm:text-4xl lg:text-5xl">
+                Get in touch
               </h2>
-              <p className="text-primary-foreground/90 text-sm sm:text-base font-medium leading-relaxed">
-                Have any questions or special requests?
-                <br />
-                Feel free to reach out to our dedicated team.
+              <p className="text-sm font-medium leading-relaxed text-primary-foreground/90 sm:text-base">
+                Questions about a booking, a damaged item or listing your
+                shop? Our team usually replies within a few hours.
               </p>
             </div>
 
-            <div className="bg-background text-primary rounded-2xl p-6 lg:p-8 max-w-md w-full shadow-lg border border-border/10">
-              <p className="font-bold text-xs sm:text-sm uppercase tracking-wider text-center leading-snug">
-                CONTACT US TODAY AND LET US MAKE YOUR ADVENTURE MORE UNIQUE.
+            <div className="w-full max-w-md rounded-2xl border border-border/10 bg-background p-6 text-primary shadow-lg lg:p-8">
+              <p className="text-center text-xs font-bold uppercase leading-snug tracking-wider sm:text-sm">
+                Contact us today and let us make your next adventure easier.
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 pt-4">
-            <div className="bg-background rounded-2xl p-6 text-primary space-y-4 shadow-sm border border-border/10">
-              <span className="text-xs font-bold uppercase tracking-wider opacity-60">
-                ADDRESS
+          <div className="relative grid grid-cols-1 gap-4 pt-4 sm:gap-6 md:grid-cols-3">
+            <div className="space-y-4 rounded-2xl border border-border/10 bg-background p-6 text-primary shadow-sm">
+              <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider opacity-60">
+                <MapPin className="h-4 w-4" /> Address
               </span>
-              <p className="font-bold text-base sm:text-lg leading-snug">
-                Mirpur ,Dhaka
+              <p className="text-base font-bold leading-snug sm:text-lg">
+                Mirpur, Dhaka
                 <br />
                 Bangladesh
               </p>
             </div>
 
-            <div className="bg-background rounded-2xl p-6 text-primary space-y-4 shadow-sm border border-border/10">
+            <div className="space-y-4 rounded-2xl border border-border/10 bg-background p-6 text-primary shadow-sm">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider opacity-60 block mb-1">
-                  PHONE
+                <span className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-wider opacity-60">
+                  <Phone className="h-4 w-4" /> Phone
                 </span>
                 <a
-                  href="tel:+390212345678"
-                  className="font-bold text-base sm:text-lg hover:underline block"
+                  href="tel:+8801700000000"
+                  className="block text-base font-bold hover:underline sm:text-lg"
                 >
-                  +39 02 12345678
+                  +880 1700-000000
                 </a>
               </div>
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider opacity-60 block mb-1">
-                  EMAIL
+                <span className="mb-1 flex items-center gap-2 text-xs font-bold uppercase tracking-wider opacity-60">
+                  <Mail className="h-4 w-4" /> Email
                 </span>
                 <a
                   href="mailto:info@gearup.com"
-                  className="font-bold text-base sm:text-lg hover:underline block truncate"
+                  className="block truncate text-base font-bold hover:underline sm:text-lg"
                 >
                   info@gearup.com
                 </a>
               </div>
             </div>
 
-            <div className="bg-background rounded-2xl p-5 text-primary space-y-4 shadow-sm border border-border/10 flex flex-col justify-between">
+            <div className="flex flex-col justify-between space-y-4 rounded-2xl border border-border/10 bg-background p-5 text-primary shadow-sm">
               <span className="text-xs font-bold uppercase tracking-wider opacity-60">
-                OUR SOCIALS
+                Our socials
               </span>
-              <div className="flex items-center gap-2">
-                <a
-                  href="#"
-                  className="w-20 h-20 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity"
-                  aria-label="Facebook"
-                >
-                  <FaFacebook className="w-10 h-10 fill-current" />
-                </a>
-                <a
-                  href="#"
-                  className="w-20 h-20 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity"
-                  aria-label="Facebook"
-                >
-                  <FaLinkedin className="w-10 h-10 fill-current" />
-                </a>{" "}
-                <a
-                  href="#"
-                  className="w-20 h-20 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity"
-                  aria-label="Facebook"
-                >
-                  <FaWhatsapp className="w-10 h-10 fill-current" />
-                </a>
-                <a
-                  href="#"
-                  className="w-20 h-20 rounded-xl bg-primary text-primary-foreground flex items-center justify-center hover:opacity-90 transition-opacity"
-                  aria-label="Instagram"
-                >
-                  <FaInstagram className="w-10 h-10" />
-                </a>
+              <div className="grid grid-cols-4 gap-2">
+                {SOCIALS.map(({ icon: Icon, label, href }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="flex aspect-square items-center justify-center rounded-xl bg-primary text-primary-foreground transition-opacity hover:opacity-90"
+                  >
+                    <Icon className="h-7 w-7" />
+                  </a>
+                ))}
               </div>
             </div>
           </div>
