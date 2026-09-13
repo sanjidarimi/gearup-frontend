@@ -41,3 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 # design : https://www.designesia.com/themes/rentaly/02_dark-index-1.html
+!.env.example
