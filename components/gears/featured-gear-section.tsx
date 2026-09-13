@@ -1,8 +1,11 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+
+import { ErrorState } from "@/components/shared/error-state";
 import { useGears } from "@/hooks/gear/queries";
-import { AlertCircle, RefreshCw } from "lucide-react";
+import { getErrorMessage } from "@/lib/api-client";
+import { PackageOpen } from "lucide-react";
+import Link from "next/link";
+import { GearCardSkeleton } from "./gear-card";
 import { FeaturedGearCarousel } from "./featured-gear-carousel";
 
 interface FeaturedGearSectionProps {
@@ -10,73 +13,50 @@ interface FeaturedGearSectionProps {
   subtitle?: string;
 }
 
+const FEATURED_PARAMS = { limit: 9, isAvailable: "true" };
+
 export function FeaturedGearSection({
   title = "Featured Gear",
-  subtitle = "High-demand professional equipment ready for deployment",
+  subtitle = "Popular equipment ready to book right now",
 }: FeaturedGearSectionProps) {
-  const { data, isLoading, isError, refetch } = useGears({});
- 
-  const gearItem = data?.data;
-
-
-  if (isLoading) {
-    return (
-      <div className="space-y-4  container mx-auto">
-        <div className="space-y-2">
-          <Skeleton className="h-7 w-48 bg-muted" />
-          <Skeleton className="h-4 w-96 bg-muted" />
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className="flex flex-col space-y-3 rounded-xl border border-border p-4"
-            >
-              <Skeleton className="aspect-4/3 w-full rounded-lg bg-muted" />
-              <Skeleton className="h-4 w-2/3 bg-muted" />
-              <Skeleton className="h-4 w-1/3 bg-muted" />
-              <div className="flex items-center justify-between pt-2">
-                <Skeleton className="h-6 w-16 bg-muted" />
-                <Skeleton className="h-8 w-24 bg-muted" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (isError) {
-    return (
-      <div className="flex flex-col items-center justify-center rounded-xl border border-destructive/20 bg-destructive/5 p-8 text-center">
-        <AlertCircle className="size-10 text-destructive mb-2" />
-        <h3 className="font-semibold text-foreground">
-          Failed to load featured gear
-        </h3>
-        <p className="text-sm text-muted-foreground mt-1 mb-4">
-          Something went wrong while fetching the gear list.
-        </p>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => refetch()}
-          className="gap-2 border-border"
-        >
-          <RefreshCw className="size-4" /> Try Again
-        </Button>
-      </div>
-    );
-  }
-
-  if (!gearItem || gearItem.length === 0) {
-    return (
-      <div className="rounded-xl border border-border bg-card p-8 text-center text-muted-foreground">
-        No gear available at the moment.
-      </div>
-    );
-  }
+  const { data, isLoading, isError, error, refetch } = useGears(FEATURED_PARAMS);
+  const items = data?.data ?? [];
 
   return (
-    <FeaturedGearCarousel items={gearItem} title={title} subtitle={subtitle} />
+    <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      {isLoading ? (
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <div className="h-7 w-48 animate-pulse rounded-md bg-muted" />
+            <div className="h-4 w-72 animate-pulse rounded-md bg-muted" />
+          </div>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <GearCardSkeleton key={index} />
+            ))}
+          </div>
+        </div>
+      ) : isError ? (
+        <ErrorState
+          title="Couldn't load featured gear"
+          message={getErrorMessage(error)}
+          onRetry={() => refetch()}
+        />
+      ) : items.length === 0 ? (
+        <div className="flex flex-col items-center rounded-2xl border border-dashed border-border p-10 text-center">
+          <PackageOpen className="mb-3 h-8 w-8 text-muted-foreground" />
+          <p className="font-semibold text-foreground">No gear listed yet</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Providers are stocking up. Check back soon or{" "}
+            <Link href="/auth/register?role=PROVIDER" className="text-primary hover:underline">
+              list your own gear
+            </Link>
+            .
+          </p>
+        </div>
+      ) : (
+        <FeaturedGearCarousel items={items} title={title} subtitle={subtitle} />
+      )}
+    </section>
   );
 }

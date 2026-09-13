@@ -1,10 +1,11 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
-import useEmblaCarousel from "embla-carousel-react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import * as React from "react";
+
 import { Button } from "@/components/ui/button";
-import { Gear } from "@/types/gear";
+import type { Gear } from "@/types/gear";
+import useEmblaCarousel from "embla-carousel-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 import { GearCard } from "./gear-card";
 
 interface FeaturedGearCarouselProps {
@@ -16,86 +17,90 @@ interface FeaturedGearCarouselProps {
 export function FeaturedGearCarousel({
   items,
   title = "Featured Gear",
-  subtitle = "High-demand professional equipment ready for deployment",
+  subtitle,
 }: FeaturedGearCarouselProps) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: "start",
-    loop: false,
-    skipSnaps: false,
-    dragFree: false,
-  });
-  const [canScrollPrev, setCanScrollPrev] = React.useState(false);
-  const [canScrollNext, setCanScrollNext] = React.useState(false);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start" });
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
 
-  const scrollPrev = React.useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
-
-  const scrollNext = React.useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
-  }, [emblaApi]);
-
-  const onSelect = React.useCallback(() => {
+  const updateButtons = useCallback(() => {
     if (!emblaApi) return;
     setCanScrollPrev(emblaApi.canScrollPrev());
     setCanScrollNext(emblaApi.canScrollNext());
   }, [emblaApi]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!emblaApi) return;
-    onSelect();
-    emblaApi.on("select", onSelect);
-    emblaApi.on("reInit", onSelect);
-  }, [emblaApi, onSelect]);
+
+    const frame = requestAnimationFrame(updateButtons);
+    emblaApi.on("select", updateButtons);
+    emblaApi.on("reInit", updateButtons);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      emblaApi.off("select", updateButtons);
+      emblaApi.off("reInit", updateButtons);
+    };
+  }, [emblaApi, updateButtons]);
 
   return (
-    <section className="space-y-4 container mx-auto mb-20">
+    <div className="space-y-6">
       <div className="flex items-end justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-foreground md:text-2xl">
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary">
+            Ready to rent
+          </p>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
             {title}
           </h2>
           {subtitle && (
-            <p className="text-sm text-muted-foreground">{subtitle}</p>
+            <p className="mt-2 text-sm text-muted-foreground">{subtitle}</p>
           )}
         </div>
 
         <div className="flex items-center gap-2">
+          <Link
+            href="/gear"
+            className="mr-2 hidden items-center gap-1.5 text-sm font-semibold text-primary hover:underline sm:inline-flex"
+          >
+            See all
+            <ArrowRight className="h-4 w-4" />
+          </Link>
           <Button
             variant="outline"
-            size="icon"
-            onClick={scrollPrev}
+            size="icon-lg"
+            onClick={() => emblaApi?.scrollPrev()}
             disabled={!canScrollPrev}
             aria-label="Previous gear"
-            className="size-9 rounded-full border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground disabled:opacity-40"
+            className="rounded-full"
           >
-            <ChevronLeft className="size-5" />
+            <ChevronLeft />
           </Button>
           <Button
             variant="outline"
-            size="icon"
-            onClick={scrollNext}
+            size="icon-lg"
+            onClick={() => emblaApi?.scrollNext()}
             disabled={!canScrollNext}
             aria-label="Next gear"
-            className="size-9 rounded-full border-border bg-background text-foreground hover:bg-accent hover:text-accent-foreground disabled:opacity-40"
+            className="rounded-full"
           >
-            <ChevronRight className="size-5" />
+            <ChevronRight />
           </Button>
         </div>
       </div>
 
       <div className="overflow-hidden" ref={emblaRef}>
-        <div className="-ml-4 flex">
-          {items?.map((item) => (
+        <div className="-ml-5 flex py-2">
+          {items.map((item, index) => (
             <div
               key={item.id}
-              className="min-w-0 shrink-0 grow-0 pl-4 basis-full sm:basis-1/2 lg:basis-1/3"
+              className="min-w-0 shrink-0 grow-0 basis-full pl-5 sm:basis-1/2 lg:basis-1/3"
             >
-              <GearCard gear={item} />
+              <GearCard gear={item} priority={index < 3} />
             </div>
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }
