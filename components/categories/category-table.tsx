@@ -1,6 +1,8 @@
 "use client";
 
-import { Edit, Trash2 } from "lucide-react";
+import { TableSkeleton } from "@/components/dashboard/dashboard-skeleton";
+import { EmptyState } from "@/components/shared/empty-state";
+import { ErrorState } from "@/components/shared/error-state";
 import {
   Table,
   TableBody,
@@ -9,127 +11,79 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useCategory } from "@/hooks/category/queries";
+import { useCategories } from "@/hooks/category/queries";
+import { getErrorMessage } from "@/lib/api-client";
+import { formatDate, shortId } from "@/lib/format";
+import { getCategoryVisual } from "@/lib/images";
+import { ExternalLink, Tags } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export function CategoryTable() {
-  const { data: categories, isLoading, isError } = useCategory();
+  const { data: categories = [], isLoading, isError, error, refetch } =
+    useCategories();
 
-  if (isLoading) {
-    return (
-      <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
-        <Table>
-          <TableHeader className="bg-secondary">
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Created At</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <TableRow key={i}>
-                <TableCell>
-                  <Skeleton className="h-4 w-32" />
-                </TableCell>
-                <TableCell>
-                  <Skeleton className="h-4 w-24" />
-                </TableCell>
-                <TableCell className="text-right">
-                  <Skeleton className="h-4 w-16 ml-auto" />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
-  }
+  if (isLoading) return <TableSkeleton />;
 
   if (isError) {
+    return <ErrorState message={getErrorMessage(error)} onRetry={() => refetch()} />;
+  }
+
+  if (categories.length === 0) {
     return (
-      <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
-        <Table>
-          <TableHeader className="bg-secondary">
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Created At</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell
-                colSpan={3}
-                className="h-24 text-center text-destructive"
-              >
-                Failed to load categories.
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </div>
+      <EmptyState
+        icon={Tags}
+        title="No categories yet"
+        description="Create the first category so providers can start listing gear."
+      />
     );
   }
 
   return (
-    <div className="rounded-lg border border-border bg-card shadow-sm overflow-hidden">
+    <div className="overflow-hidden rounded-2xl border border-border bg-card">
       <Table>
-        <TableHeader className="bg-secondary">
+        <TableHeader className="bg-muted/40">
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Created At</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="px-4">Category</TableHead>
+            <TableHead>ID</TableHead>
+            <TableHead>Created</TableHead>
+            <TableHead className="px-4 text-right">Catalog</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {categories && categories.length > 0 ? (
-            categories.map((category) => (
-              <TableRow
-                key={category.id}
-                className="hover:bg-muted/50 transition-colors"
-              >
-                <TableCell className="font-medium text-foreground">
-                  {category.name}
-                </TableCell>
-                <TableCell className="text-muted-foreground">
-                  {new Date(category.createdAt).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="h-8 w-8 text-destructive hover:bg-destructive/10"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+          {categories.map((category) => (
+            <TableRow key={category.id}>
+              <TableCell className="px-4 py-3">
+                <div className="flex items-center gap-3">
+                  <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-muted">
+                    <Image
+                      src={getCategoryVisual(category.name).cover}
+                      alt=""
+                      fill
+                      sizes="40px"
+                      className="object-cover"
+                    />
                   </div>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={3}
-                className="h-24 text-center text-muted-foreground"
-              >
-                No categories found. Add one to get started.
+                  <span className="text-sm font-semibold text-foreground">{category.name}</span>
+                </div>
+              </TableCell>
+              <TableCell className="font-mono text-xs text-muted-foreground">
+                {shortId(category.id)}
+              </TableCell>
+              <TableCell className="text-sm text-muted-foreground">
+                {formatDate(category.createdAt)}
+              </TableCell>
+              <TableCell className="px-4 text-right">
+                <Link
+                  href={`/gear?category=${encodeURIComponent(category.name)}`}
+                  target="_blank"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                >
+                  View gear <ExternalLink className="size-3.5" />
+                </Link>
               </TableCell>
             </TableRow>
-          )}
+          ))}
         </TableBody>
       </Table>
     </div>

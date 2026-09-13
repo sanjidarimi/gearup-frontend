@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -11,54 +13,84 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCreateCategory } from "@/hooks/category/queries";
-import { Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { useState } from "react";
 
 export function AddCategoryModal() {
   const [open, setOpen] = useState(false);
-  const createCategoryMutation = useCreateCategory();
+  const [name, setName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const createCategory = useCreateCategory();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const name = formData.get("name") as string;
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmed = name.trim();
 
-    createCategoryMutation.mutate(
-      { name },
+    if (trimmed.length < 2) {
+      setError("Category names need at least 2 characters.");
+      return;
+    }
+
+    setError(null);
+    createCategory.mutate(
+      { name: trimmed },
       {
         onSuccess: () => {
           setOpen(false);
+          setName("");
         },
       },
     );
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        setOpen(nextOpen);
+        if (!nextOpen) setError(null);
+      }}
+    >
       <DialogTrigger asChild>
-        <Button className="bg-primary text-primary-foreground gap-2">
-          <Plus className="h-4 w-4" /> Add Category
+        <Button size="lg" className="h-10 px-4">
+          <Plus />
+          Add category
         </Button>
       </DialogTrigger>
-      <DialogContent className="bg-card text-card-foreground max-w-sm border-border">
-        <DialogHeader>
-          <DialogTitle className="text-xl font-bold">
-            Add New Category
-          </DialogTitle>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <DialogContent className="sm:max-w-sm">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-bold">New category</DialogTitle>
+            <DialogDescription className="text-sm">
+              Providers pick from these when listing gear. Names must be unique.
+            </DialogDescription>
+          </DialogHeader>
+
           <div className="space-y-2">
-            <Label htmlFor="name">Category Name</Label>
-            <Input id="name" name="name" required placeholder="e.g. Camping" />
+            <Label htmlFor="category-name" className="text-sm">
+              Category name
+            </Label>
+            <Input
+              id="category-name"
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              placeholder="e.g. Camping & Hiking"
+              aria-invalid={Boolean(error)}
+              className="h-10 text-sm"
+              autoFocus
+            />
+            {error && <p className="text-xs font-medium text-destructive">{error}</p>}
           </div>
 
-          <Button
-            type="submit"
-            className="w-full bg-primary text-primary-foreground"
-            disabled={createCategoryMutation.isPending}
-          >
-            {createCategoryMutation.isPending ? "Saving..." : "Save Category"}
-          </Button>
+          <DialogFooter>
+            <Button type="button" variant="outline" size="lg" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" size="lg" disabled={createCategory.isPending}>
+              {createCategory.isPending && <Loader2 className="animate-spin" />}
+              Save category
+            </Button>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
